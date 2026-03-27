@@ -7,6 +7,12 @@ class Eleve {
   final String? telephone;
   final String? email;
   final String? adresse;
+  final String? ville;
+  final String? codePostal;
+  final String? contactUrgenceNom;
+  final String? contactUrgenceTelephone;
+  final String? contactUrgenceRelation;
+  final String? sexe;
   final String? photoUrl;
   final String statut;
   final DateTime? createdAt;
@@ -21,6 +27,12 @@ class Eleve {
     this.telephone,
     this.email,
     this.adresse,
+    this.ville,
+    this.codePostal,
+    this.contactUrgenceNom,
+    this.contactUrgenceTelephone,
+    this.contactUrgenceRelation,
+    this.sexe,
     this.photoUrl,
     this.statut = 'inscrit',
     this.createdAt,
@@ -28,6 +40,12 @@ class Eleve {
   });
 
   String get nomComplet => '$prenom $nom';
+  
+  String get initiales {
+    final p = prenom.isNotEmpty ? prenom[0].toUpperCase() : '';
+    final n = nom.isNotEmpty ? nom[0].toUpperCase() : '';
+    return '$p$n';
+  }
 
   factory Eleve.fromJson(Map<String, dynamic> json) {
     return Eleve(
@@ -41,6 +59,12 @@ class Eleve {
       telephone: json['telephone'] as String?,
       email: json['email'] as String?,
       adresse: json['adresse'] as String?,
+      ville: json['ville'] as String?,
+      codePostal: json['code_postal'] as String?,
+      contactUrgenceNom: json['contact_urgence_nom'] as String?,
+      contactUrgenceTelephone: json['contact_urgence_telephone'] as String?,
+      contactUrgenceRelation: json['contact_urgence_relation'] as String?,
+      sexe: json['sexe'] as String?,
       photoUrl: json['photo_url'] as String?,
       statut: json['statut'] as String? ?? 'inscrit',
       createdAt: json['created_at'] != null
@@ -62,6 +86,12 @@ class Eleve {
       'telephone': telephone,
       'email': email,
       'adresse': adresse,
+      'ville': ville,
+      'code_postal': codePostal,
+      'contact_urgence_nom': contactUrgenceNom,
+      'contact_urgence_telephone': contactUrgenceTelephone,
+      'contact_urgence_relation': contactUrgenceRelation,
+      'sexe': sexe,
       'photo_url': photoUrl,
       'statut': statut,
       'created_at': createdAt?.toIso8601String(),
@@ -78,6 +108,12 @@ class Eleve {
     String? telephone,
     String? email,
     String? adresse,
+    String? ville,
+    String? codePostal,
+    String? contactUrgenceNom,
+    String? contactUrgenceTelephone,
+    String? contactUrgenceRelation,
+    String? sexe,
     String? photoUrl,
     String? statut,
     DateTime? createdAt,
@@ -92,6 +128,12 @@ class Eleve {
       telephone: telephone ?? this.telephone,
       email: email ?? this.email,
       adresse: adresse ?? this.adresse,
+      ville: ville ?? this.ville,
+      codePostal: codePostal ?? this.codePostal,
+      contactUrgenceNom: contactUrgenceNom ?? this.contactUrgenceNom,
+      contactUrgenceTelephone: contactUrgenceTelephone ?? this.contactUrgenceTelephone,
+      contactUrgenceRelation: contactUrgenceRelation ?? this.contactUrgenceRelation,
+      sexe: sexe ?? this.sexe,
       photoUrl: photoUrl ?? this.photoUrl,
       statut: statut ?? this.statut,
       createdAt: createdAt ?? this.createdAt,
