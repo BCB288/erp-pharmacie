@@ -1,0 +1,41 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "blaze-optimizer",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-X", "utf8", "tools/blaze_optimizer.py", "--action", "full"],
+      "port": null
+    },
+    {
+      "name": "post-generator",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-X", "utf8", "tools/post_generator.py", "--plateforme", "instagram", "--sujet", "Inscriptions ouvertes", "--objectif", "attirer des inscrits", "--ton", "motivant"],
+      "port": null
+    },
+    {
+      "name": "brand-checker",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-X", "utf8", "tools/brand_checker.py", "--input", ".tmp/post_draft.json"],
+      "port": null
+    },
+    {
+      "name": "veille",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-X", "utf8", "tools/veille.py", "--canal", "facebook", "--mode", "interactif"],
+      "port": null
+    },
+    {
+      "name": "notion-push",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-X", "utf8", "tools/notion_push.py", "--type", "post", "--input", ".tmp/post_draft.json", "--date", "2026-04-01", "--plateforme", "instagram"],
+      "port": null
+    },
+    {
+      "name": "faq-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "3333", "--directory", ".tmp"],
+      "port": 3333
+    }
+  ]
+}
