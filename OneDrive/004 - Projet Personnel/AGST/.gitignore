@@ -1,0 +1,16 @@
+# Media assets (images & videos — committed separately or via LFS)
+Marketing/
+Logo/
+
+# Project admin docs
+ADM/
+Projet - ASGT/
+
+# Stitch staging area
+.stitch/designs/
+.stitch/metadata.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.tmp

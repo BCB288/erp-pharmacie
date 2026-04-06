@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nos Joueurs — AGST Académie Globale Sportive Tigana</title>
+  <meta name="description" content="Découvrez les joueurs de l'AGST — galerie photos, résultats de matchs et profils des jeunes footballeurs de Bamako." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green:       #1A7A3C;
+      --green-dark:  #0F5429;
+      --gold:        #F5A623;
+      --gold-dark:   #D4891B;
+      --navy:        #0D1B48;
+      --orange:      #F4511E;
+      --white:       #FFFFFF;
+      --warm-white:  #FAFAF7;
+      --surface:     #F0F4F0;
+      --text-dark:   #1A1A1A;
+      --text-mid:    #444444;
+      --text-light:  #888888;
+      --border:      #DDE8DD;
+      --radius-sm:   8px;
+      --radius-md:   12px;
+      --radius-pill: 100px;
+      --shadow-sm:   0 2px 8px rgba(0,0,0,0.08);
+      --shadow-md:   0 4px 20px rgba(0,0,0,0.14);
+      --font-head:   'Oswald', sans-serif;
+      --font-body:   'Inter', sans-serif;
+      --max-w:       480px;
+      --c1: #1A7A3C;
+      --c2: #F5A623;
+      --c3: #F4511E;
+      --c4: #0D1B48;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--warm-white); color: var(--text-dark); max-width: var(--max-w); margin: 0 auto; overflow-x: hidden; }
+    img  { display: block; max-width: 100%; height: auto; }
+    a    { text-decoration: none; color: inherit; }
+    ul   { list-style: none; }
+
+    .section-label { font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+
+    /* ── NAVBAR ── */
+    .navbar { position: sticky; top: 0; z-index: 100; background: var(--navy); padding: 0 16px; height: 56px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-md); }
+    .navbar__logo { display: flex; align-items: center; gap: 10px; }
+    .navbar__logo img { height: 38px; width: 38px; object-fit: contain; border-radius: 4px; }
+    .navbar__brand { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--white); line-height: 1.1; }
+    .navbar__brand span { display: block; font-size: 10px; font-weight: 400; color: var(--gold); font-family: var(--font-body); }
+    .navbar__actions { display: flex; align-items: center; gap: 8px; }
+    .lang-toggle { display: flex; background: rgba(255,255,255,0.1); border-radius: var(--radius-pill); overflow: hidden; }
+    .lang-toggle button { border: none; background: transparent; color: rgba(255,255,255,0.6); font-family: var(--font-body); font-size: 10px; font-weight: 600; padding: 4px 7px; cursor: pointer; transition: all 0.2s; }
+    .lang-toggle button.active { background: var(--gold); color: var(--navy); border-radius: var(--radius-pill); }
+    .menu-btn { background: none; border: none; cursor: pointer; padding: 4px; display: flex; flex-direction: column; gap: 5px; }
+    .menu-btn span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px; }
+
+    /* ── NAV OVERLAY ── */
+    .nav-menu { display: none; position: fixed; inset: 0; background: var(--navy); z-index: 200; flex-direction: column; }
+    .nav-menu.open { display: flex; }
+    .nav-menu__header { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .nav-menu__close { background: none; border: none; color: var(--white); font-size: 24px; cursor: pointer; padding: 4px; }
+    .nav-menu__links { flex: 1; padding: 24px 16px; display: flex; flex-direction: column; gap: 4px; }
+    .nav-menu__links a { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.7); padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07); text-transform: uppercase; transition: color 0.2s; }
+    .nav-menu__links a:hover, .nav-menu__links a.active { color: var(--gold); }
+    .nav-menu__footer { padding: 20px 16px; border-top: 1px solid rgba(255,255,255,0.1); }
+
+    /* ── HERO ── */
+    .hero { position: relative; min-height: 340px; overflow: hidden; }
+    .hero__grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 170px 170px; gap: 3px; }
+    .hero__grid img { width: 100%; height: 100%; object-fit: cover; }
+    .hero__grid img:first-child { grid-row: span 2; }
+    .hero__overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(13,27,72,0.15) 0%, rgba(10,60,28,0.88) 100%); z-index: 1; }
+    .hero__content { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; padding: 20px 20px 24px; }
+    .hero__breadcrumb { display: flex; align-items: center; gap: 6px; font-family: var(--font-body); font-size: 11px; color: rgba(255,255,255,0.55); margin-bottom: 10px; }
+    .hero__breadcrumb a { color: rgba(255,255,255,0.55); }
+    .hero__breadcrumb span { color: var(--gold); font-weight: 600; }
+    .hero__headline { font-family: var(--font-head); font-size: 44px; font-weight: 700; color: var(--white); line-height: 1.0; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero__headline em { color: var(--gold); font-style: normal; }
+    .hero__sub { font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.8); }
+
+    /* ── SECTIONS ── */
+    .section { padding: 28px 16px; }
+    .section--surface { background: var(--surface); }
+    .section__title { font-family: var(--font-head); font-size: 26px; font-weight: 700; color: var(--navy); text-transform: uppercase; line-height: 1.1; margin-bottom: 4px; }
+    .section__title em { color: var(--green); font-style: normal; }
+    .section__sub { font-family: var(--font-body); font-size: 13px; color: var(--text-mid); margin-bottom: 18px; line-height: 1.6; }
+
+    /* ── FILTER TABS ── */
+    .filter-tabs { display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-bottom: 16px; }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    .filter-tab { flex-shrink: 0; padding: 7px 14px; border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 12px; font-weight: 600; cursor: pointer; border: 2px solid var(--border); background: var(--white); color: var(--text-mid); transition: all 0.2s; }
+    .filter-tab.active { background: var(--green); color: var(--white); border-color: var(--green); }
+    .filter-tab[data-filter="poussins"].active { background: var(--c1); border-color: var(--c1); color: var(--white); }
+    .filter-tab[data-filter="benjamins"].active { background: var(--c2); border-color: var(--c2); color: var(--navy); }
+    .filter-tab[data-filter="minimes"].active { background: var(--c3); border-color: var(--c3); color: var(--white); }
+    .filter-tab[data-filter="cadets"].active { background: var(--c4); border-color: var(--c4); color: var(--white); }
+
+    /* ── PHOTO GALLERY ── */
+    .gallery-count { font-family: var(--font-body); font-size: 12px; color: var(--text-light); margin-bottom: 12px; }
+    .gallery-count strong { color: var(--green); }
+    .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .photo-item { position: relative; border-radius: var(--radius-sm); overflow: hidden; cursor: pointer; aspect-ratio: 4/3; background: var(--surface); }
+    .photo-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+    .photo-item:hover img { transform: scale(1.05); }
+    .photo-item__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
+    .photo-item:hover .photo-item__overlay { background: rgba(0,0,0,0.25); }
+    .photo-item__overlay svg { opacity: 0; transition: opacity 0.2s; color: white; }
+    .photo-item:hover .photo-item__overlay svg { opacity: 1; }
+    .photo-item[data-cat] { display: block; }
+    .photo-item.hidden { display: none; }
+    .cat-badge { position: absolute; top: 6px; left: 6px; padding: 2px 7px; border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .cat-badge--poussins  { background: rgba(26,122,60,0.85); color: white; }
+    .cat-badge--benjamins { background: rgba(245,166,35,0.9); color: var(--navy); }
+    .cat-badge--minimes   { background: rgba(244,81,30,0.85); color: white; }
+    .cat-badge--cadets    { background: rgba(13,27,72,0.85); color: white; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
+    .lightbox.open { display: flex; }
+    .lightbox__img { max-width: 100%; max-height: 85vh; border-radius: var(--radius-sm); object-fit: contain; }
+    .lightbox__close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.15); border: none; color: white; font-size: 22px; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .lightbox__close:hover { background: rgba(255,255,255,0.25); }
+    .lightbox__prev, .lightbox__next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.12); border: none; color: white; font-size: 20px; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .lightbox__prev { left: 12px; }
+    .lightbox__next { right: 12px; }
+    .lightbox__prev:hover, .lightbox__next:hover { background: rgba(255,255,255,0.22); }
+    .lightbox__counter { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-family: var(--font-body); font-size: 12px; color: rgba(255,255,255,0.6); }
+
+    /* ── VIDEOS ── */
+    .video-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+    .video-scroll::-webkit-scrollbar { display: none; }
+    .video-inner { display: flex; gap: 12px; width: max-content; }
+    .video-card { width: 220px; flex-shrink: 0; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); background: var(--navy); }
+    .video-card__thumb { position: relative; height: 130px; overflow: hidden; cursor: pointer; }
+    .video-card__thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .video-card__thumb video { width: 100%; height: 100%; object-fit: cover; }
+    .play-btn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.35); transition: background 0.2s; }
+    .play-btn:hover { background: rgba(0,0,0,0.5); }
+    .play-btn svg { width: 44px; height: 44px; color: white; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+    .video-card__body { padding: 10px 12px 14px; }
+    .video-card__label { font-family: var(--font-body); font-size: 10px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .video-card__title { font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--white); text-transform: uppercase; line-height: 1.2; }
+
+    /* ── MATCH RESULTS ── */
+    .results-list { display: flex; flex-direction: column; gap: 10px; }
+    .result-card { background: var(--white); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+    .result-card__meta { display: flex; align-items: center; justify-content: space-between; }
+    .result-card__date { font-family: var(--font-body); font-size: 11px; color: var(--text-light); }
+    .result-card__badge { padding: 3px 8px; border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 10px; font-weight: 700; text-transform: uppercase; }
+    .result-card__badge--win  { background: rgba(26,122,60,0.12); color: var(--green); }
+    .result-card__badge--draw { background: rgba(245,166,35,0.12); color: var(--gold-dark); }
+    .result-card__badge--loss { background: rgba(244,81,30,0.12); color: var(--orange); }
+    .result-card__score { display: flex; align-items: center; justify-content: center; gap: 0; }
+    .result-card__team { flex: 1; text-align: center; }
+    .result-card__team-name { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--navy); text-transform: uppercase; line-height: 1.1; }
+    .result-card__team-name--agst { color: var(--green); }
+    .result-card__goals { font-family: var(--font-head); font-size: 28px; font-weight: 700; color: var(--navy); width: 70px; text-align: center; border-left: 1px solid var(--border); border-right: 1px solid var(--border); padding: 4px 0; line-height: 1; }
+    .result-card__cat { font-family: var(--font-body); font-size: 10px; color: var(--text-light); text-align: center; }
+
+    /* ── PLAYER PROFILES ── */
+    .profiles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .profile-card { background: var(--white); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); overflow: hidden; }
+    .profile-card__photo { height: 140px; width: 100%; object-fit: cover; object-position: center top; }
+    .profile-card__placeholder { height: 140px; background: linear-gradient(135deg, var(--navy), var(--green-dark)); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+    .profile-card__body { padding: 12px; }
+    .profile-card__name { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--navy); text-transform: uppercase; line-height: 1.1; margin-bottom: 4px; }
+    .profile-card__tags { display: flex; gap: 4px; flex-wrap: wrap; }
+    .profile-tag { display: inline-block; padding: 2px 7px; border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 10px; font-weight: 600; }
+    .profile-tag--cat  { background: var(--surface); color: var(--text-mid); }
+    .profile-tag--pos  { background: rgba(26,122,60,0.1); color: var(--green); }
+
+    /* ── ALUMNI ── */
+    .alumni-block { background: linear-gradient(135deg, var(--navy), #1A2B5C); border-radius: var(--radius-md); padding: 28px 20px; text-align: center; }
+    .alumni-block__icon { font-size: 40px; margin-bottom: 12px; }
+    .alumni-block__title { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--white); text-transform: uppercase; margin-bottom: 8px; }
+    .alumni-block__sub { font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+    .alumni-block__badge { display: inline-block; margin-top: 14px; background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.3); border-radius: var(--radius-pill); padding: 5px 14px; font-family: var(--font-body); font-size: 11px; color: var(--gold); }
+
+    /* ── BUTTONS / CTA ── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 20px; border-radius: var(--radius-pill); font-family: var(--font-head); font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; width: 100%; }
+    .btn--gold { background: var(--gold); color: var(--navy); border-color: var(--gold); box-shadow: 0 4px 16px rgba(245,166,35,0.4); }
+    .btn--whatsapp { background: #25D366; color: var(--white); border-color: #25D366; box-shadow: 0 4px 16px rgba(37,211,102,0.35); }
+    .btn__arrow { margin-left: auto; }
+    .cta-section { background: linear-gradient(135deg, var(--navy), var(--green-dark)); padding: 32px 20px; text-align: center; }
+    .cta-section__badge { display: inline-block; background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.4); border-radius: var(--radius-pill); padding: 5px 14px; font-family: var(--font-body); font-size: 11px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .cta-section__title { font-family: var(--font-head); font-size: 28px; font-weight: 700; color: var(--white); text-transform: uppercase; line-height: 1.1; margin-bottom: 12px; }
+    .cta-section__title em { color: var(--gold); font-style: normal; }
+    .cta-section__sub { font-family: var(--font-body); font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 24px; line-height: 1.6; }
+    .cta-section__btns { display: flex; flex-direction: column; gap: 12px; }
+
+    /* ── FOOTER ── */
+    .footer { background: var(--navy); padding: 28px 16px 20px; }
+    .footer__top { display: flex; align-items: center; gap: 12px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+    .footer__logo { width: 48px; height: 48px; object-fit: contain; border-radius: 6px; }
+    .footer__brand { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--white); line-height: 1.2; }
+    .footer__brand span { display: block; font-family: var(--font-body); font-size: 10px; font-weight: 400; color: var(--gold); margin-top: 2px; }
+    .footer__links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-bottom: 20px; }
+    .footer__links a { font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.6); transition: color 0.2s; }
+    .footer__links a:hover { color: var(--gold); }
+    .footer__contact { font-family: var(--font-body); font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.8; margin-bottom: 16px; }
+    .footer__contact a { color: var(--gold); font-weight: 600; }
+    .footer__legal { font-family: var(--font-body); font-size: 10px; color: rgba(255,255,255,0.3); text-align: center; line-height: 1.8; }
+    .footer__legal .receipt { color: rgba(245,166,35,0.5); font-weight: 600; }
+    .whatsapp-float { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,0.5); z-index: 999; transition: transform 0.2s, box-shadow 0.2s; }
+    .whatsapp-float:hover { transform: scale(1.08); }
+    .whatsapp-float svg { width: 28px; height: 28px; }
+
+    /* ═══ DESKTOP RESPONSIVE ═══ */
+    @media (min-width: 900px) {
+      body { max-width: 100%; }
+
+      /* Navbar */
+      .navbar { padding: 0 clamp(24px, 5vw, 72px); height: 64px; }
+      .menu-btn { display: none; }
+      .nav-menu {
+        display: flex !important;
+        position: static;
+        top: auto; left: auto; right: auto; bottom: auto;
+        background: transparent;
+        flex-direction: row;
+        align-items: center;
+        z-index: auto;
+        flex: 1;
+        justify-content: center;
+      }
+      .nav-menu__header, .nav-menu__footer { display: none; }
+      .nav-menu__links { flex: none; flex-direction: row; padding: 0; gap: 0; }
+      .nav-menu__links a { font-size: 12px; font-weight: 600; padding: 8px 12px; border-bottom: none; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.3px; }
+      .nav-menu__links a:hover, .nav-menu__links a.active { color: var(--gold); }
+
+      /* Hero: 4-column photo collage */
+      .hero { min-height: 420px; }
+      .hero__grid { grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 210px 210px; }
+      .hero__grid img:first-child { grid-row: span 2; }
+      .hero__content { padding-left: clamp(40px, 6vw, 100px); padding-right: clamp(40px, 6vw, 100px); padding-bottom: 44px; }
+      .hero__headline { font-size: 64px; }
+
+      /* Sections */
+      .section { padding: 56px clamp(32px, 5vw, 80px); max-width: 1280px; margin-left: auto; margin-right: auto; }
+      .section--surface { padding: 56px 0; }
+      .section--surface > * { max-width: 1280px; margin-left: auto; margin-right: auto; padding-left: clamp(32px, 5vw, 80px); padding-right: clamp(32px, 5vw, 80px); }
+      .section__title { font-size: 36px; }
+
+      /* Photo gallery: 4 columns */
+      .photo-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+
+      /* Videos: inline grid */
+      .video-scroll { overflow-x: visible; margin: 0; padding: 0; }
+      .video-inner { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .video-card { width: auto; }
+
+      /* Match results: horizontal row */
+      .results-list { flex-direction: row; gap: 16px; }
+      .result-card { flex: 1; }
+
+      /* Player profiles: 4 columns */
+      .profiles-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+      /* CTA section */
+      .cta-section { padding: 60px clamp(32px, 5vw, 80px); max-width: 1280px; margin-left: auto; margin-right: auto; }
+      .cta-buttons { flex-direction: row; justify-content: center; gap: 16px; }
+      .cta-buttons .btn { flex: 0 1 auto; min-width: 220px; }
+
+      /* Footer */
+      .footer { padding: 48px clamp(32px, 5vw, 80px) 32px; }
+      .footer__links { grid-template-columns: repeat(3, auto); gap: 8px 20px; }
+    }
+
+    @media (min-width: 1200px) {
+      .photo-grid { grid-template-columns: repeat(5, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ LIGHTBOX ══ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visionneuse de photos">
+  <button class="lightbox__close" id="lbClose" aria-label="Fermer">✕</button>
+  <button class="lightbox__prev" id="lbPrev" aria-label="Photo précédente">‹</button>
+  <img class="lightbox__img" id="lbImg" src="" alt="" />
+  <button class="lightbox__next" id="lbNext" aria-label="Photo suivante">›</button>
+  <div class="lightbox__counter" id="lbCounter"></div>
+</div>
+
+<!-- ══ NAV OVERLAY ══ -->
+<nav class="nav-menu" id="navMenu" role="dialog" aria-modal="true" aria-label="Navigation principale">
+  <div class="nav-menu__header">
+    <div class="navbar__logo">
+      <img src="../../Logo/Logo.jpeg" alt="AGST Logo" width="36" height="36" />
+      <span class="navbar__brand">AGST<span>Académie Globale Sportive Tigana</span></span>
+    </div>
+    <button class="nav-menu__close" onclick="closeMenu()" aria-label="Fermer">✕</button>
+  </div>
+  <div class="nav-menu__links">
+    <a href="index.html">🏠 Accueil</a>
+    <a href="mission.html">🎯 Notre Mission</a>
+    <a href="programme.html">📋 Notre Programme</a>
+    <a href="joueurs.html" class="active">⚽ Nos Joueurs</a>
+    <a href="actualites.html">📰 Actualités</a>
+    <a href="rejoindre.html">✍️ Rejoindre l'AGST</a>
+  </div>
+  <div class="nav-menu__footer">
+    <a href="https://wa.me/22365418881?text=Bonjour%20AGST%2C%20je%20voudrais%20des%20informations"
+       class="btn btn--whatsapp" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      💬 WhatsApp
+    </a>
+  </div>
+</nav>
+
+<!-- ══ NAVBAR ══ -->
+<header>
+  <nav class="navbar" aria-label="Navigation principale">
+    <div class="navbar__logo">
+      <img src="../../Logo/Logo.jpeg" alt="Logo AGST" width="38" height="38" />
+      <div class="navbar__brand">AGST<span>Académie Globale Sportive Tigana</span></div>
+    </div>
+    <div class="navbar__actions">
+      <div class="lang-toggle" role="group" aria-label="Langue">
+        <button class="active" aria-pressed="true">FR</button>
+        <button aria-pressed="false">EN</button>
+        <button aria-pressed="false">BM</button>
+      </div>
+      <button class="menu-btn" onclick="openMenu()" aria-label="Ouvrir le menu" aria-expanded="false" id="menuBtn">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <!-- ══ HERO ══ -->
+  <section class="hero" aria-labelledby="hero-headline">
+    <div class="hero__grid" aria-hidden="true">
+      <img src="../../Marketing/Image/2026-04-04_equipe-blanche-groupe-complet.jpeg" alt="Equipe AGST en tenue blanche - photo officielle au stade de Bamako" loading="eager" />
+      <img src="../../Marketing/Image/2026-04-04_portrait-gardien-stance.jpeg" alt="Gardien AGST en tenue blanche et bleue - portrait officiel" loading="eager" />
+      <img src="../../Marketing/Image/2026-04-04_duo-joueurs-stade-principal.jpeg" alt="Deux joueurs au stade principal de Bamako" loading="eager" />
+    </div>
+    <div class="hero__overlay" aria-hidden="true"></div>
+    <div class="hero__content">
+      <nav class="hero__breadcrumb" aria-label="Fil d'Ariane">
+        <a href="index.html">Accueil</a>
+        <span aria-hidden="true">›</span>
+        <span aria-current="page">Nos Joueurs</span>
+      </nav>
+      <h1 class="hero__headline" id="hero-headline">Nos <em>Joueurs</em></h1>
+      <p class="hero__sub">28 photos · 5 vidéos · Les champions de demain</p>
+    </div>
+  </section>
+
+  <!-- ══ PHOTO GALLERY ══ -->
+  <section class="section" aria-labelledby="gallery-title">
+    <p class="section-label" aria-hidden="true">En images</p>
+    <h2 class="section__title" id="gallery-title">La <em>Galerie</em></h2>
+
+    <div class="filter-tabs" role="group" aria-label="Filtrer par catégorie">
+      <button class="filter-tab active" data-filter="all">Tous (28)</button>
+      <button class="filter-tab" data-filter="poussins">🐥 Poussins</button>
+      <button class="filter-tab" data-filter="benjamins">⚡ Benjamins</button>
+      <button class="filter-tab" data-filter="minimes">🔥 Minimes</button>
+      <button class="filter-tab" data-filter="cadets">🦅 Cadets</button>
+    </div>
+
+    <div class="gallery-count"><strong id="visibleCount">28</strong> photo(s) affichée(s)</div>
+
+    <div class="photo-grid" id="photoGrid" role="list">
+      <!-- Poussins — team shots, group training -->
+      <div class="photo-item" data-cat="poussins" role="listitem" tabindex="0" aria-label="Photo Poussins 1">
+        <img src="../../Marketing/Image/2026-04-04_equipe-blanche-groupe-complet.jpeg" alt="Equipe AGST en tenue blanche - photo officielle au stade de Bamako" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--poussins">Poussins</span>
+      </div>
+      <div class="photo-item" data-cat="poussins" role="listitem" tabindex="0" aria-label="Photo Poussins 2">
+        <img src="../../Marketing/Image/2026-04-04_equipe-blanche-groupe-alt.jpeg" alt="Equipe AGST en tenue blanche - photo de groupe au stade" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--poussins">Poussins</span>
+      </div>
+      <div class="photo-item" data-cat="poussins" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-blanche-groupe-v3.jpeg" alt="Equipe AGST en tenue blanche - photo officielle" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--poussins">Poussins</span>
+      </div>
+      <div class="photo-item" data-cat="poussins" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-blanche-terrain-secondaire.jpeg" alt="Equipe AGST sur le terrain secondaire" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--poussins">Poussins</span>
+      </div>
+      <!-- Benjamins -->
+      <div class="photo-item" data-cat="benjamins" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-blanche-vue-arriere.jpeg" alt="Joueurs AGST en tenue blanche - equipe au complet" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--benjamins">Benjamins</span>
+      </div>
+      <div class="photo-item" data-cat="benjamins" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-rouge-jeunesse.jpeg" alt="Jeunes joueurs AGST en tenue rouge" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--benjamins">Benjamins</span>
+      </div>
+      <div class="photo-item" data-cat="benjamins" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-verte-jeunesse.jpeg" alt="Jeunes joueurs AGST en tenue verte" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--benjamins">Benjamins</span>
+      </div>
+      <div class="photo-item" data-cat="benjamins" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-bleu-jeunesse.jpeg" alt="Jeunes joueurs AGST en tenue bleue et jaune" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--benjamins">Benjamins</span>
+      </div>
+      <!-- Minimes -->
+      <div class="photo-item" data-cat="minimes" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_portrait-gardien-stance.jpeg" alt="Gardien AGST en tenue blanche et bleue - portrait officiel" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--minimes">Minimes</span>
+      </div>
+      <div class="photo-item" data-cat="minimes" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_portrait-gardien-thumbsup.jpeg" alt="Gardien AGST en tenue rouge et verte - pouce leve" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--minimes">Minimes</span>
+      </div>
+      <div class="photo-item" data-cat="minimes" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_portrait-gardien-thumbup-noir.jpeg" alt="Joueur AGST en tenue blanche - portrait au stade" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--minimes">Minimes</span>
+      </div>
+      <div class="photo-item" data-cat="minimes" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_portrait-joueur-blanc-bleu.jpeg" alt="Joueur AGST en tenue blanche et bleue - portrait" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--minimes">Minimes</span>
+      </div>
+      <div class="photo-item" data-cat="minimes" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_portrait-joueur-blanc-bleu-v2.jpeg" alt="Joueurs AGST en tenue blanche - echauffement au stade" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--minimes">Minimes</span>
+      </div>
+      <div class="photo-item" data-cat="minimes" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_portrait-joueur-rouge.jpeg" alt="Joueur AGST - portrait au stade" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--minimes">Minimes</span>
+      </div>
+      <div class="photo-item" data-cat="minimes" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_portrait-joueur-rouge-bras-croises.jpeg" alt="Joueur AGST en tenue verte - portrait bras croises" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--minimes">Minimes</span>
+      </div>
+      <div class="photo-item" data-cat="minimes" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_ceremonie-finale-all-teams.jpeg" alt="Ceremonie de fin de tournoi - toutes les equipes AGST" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--minimes">Minimes</span>
+      </div>
+      <div class="photo-item" data-cat="minimes" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_ceremonie-echange-equipes.jpeg" alt="Echange entre equipes lors du tournoi AGST" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--minimes">Minimes</span>
+      </div>
+      <div class="photo-item" data-cat="minimes" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_ceremonie-equipes-multiples.jpeg" alt="Equipes en ligne lors d une ceremonie de tournoi" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--minimes">Minimes</span>
+      </div>
+      <!-- Cadets -->
+      <div class="photo-item" data-cat="cadets" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-bleu-groupe-complet.jpeg" alt="Equipe AGST en tenue bleue et doree - photo de groupe" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--cadets">Cadets</span>
+      </div>
+      <div class="photo-item" data-cat="cadets" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-bleu-avec-gardien.jpeg" alt="Equipe AGST en tenue bleue avec le gardien" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--cadets">Cadets</span>
+      </div>
+      <div class="photo-item" data-cat="cadets" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_encadrement-equipe-bleu.jpeg" alt="Encadreurs et joueurs AGST - briefing tactique" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--cadets">Cadets</span>
+      </div>
+      <div class="photo-item" data-cat="cadets" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-rouge-en-ligne.jpeg" alt="Joueurs AGST en tenue rouge - formation en ligne" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--cadets">Cadets</span>
+      </div>
+      <div class="photo-item" data-cat="cadets" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_duo-joueurs-stade-principal.jpeg" alt="Deux joueurs au stade principal de Bamako" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--cadets">Cadets</span>
+      </div>
+      <div class="photo-item" data-cat="cadets" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-verte-groupe.jpeg" alt="Equipe AGST en tenue verte - photo de groupe" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--cadets">Cadets</span>
+      </div>
+      <div class="photo-item" data-cat="cadets" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-verte-finale.jpeg" alt="Equipe AGST verte - photo finale de saison" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--cadets">Cadets</span>
+      </div>
+      <div class="photo-item" data-cat="cadets" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-verte-officiel.jpeg" alt="Encadreurs AGST avec l equipe verte" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--cadets">Cadets</span>
+      </div>
+      <div class="photo-item" data-cat="cadets" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-03_affiche-newyear-agst.jpeg" alt="Affiche Bonne Annee 2026 - AGST" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--cadets">Cadets</span>
+      </div>
+      <div class="photo-item" data-cat="cadets" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-blanche-groupe-v4.jpeg" alt="Joueurs AGST - coulisses avant match" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--cadets">Cadets</span>
+      </div>
+      <div class="photo-item" data-cat="cadets" role="listitem" tabindex="0">
+        <img src="../../Marketing/Image/2026-04-04_equipe-blanche-groupe-v5.jpeg" alt="Joueur et entraineur AGST - competition au stade" loading="lazy" />
+        <div class="photo-item__overlay"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        <span class="cat-badge cat-badge--cadets">Cadets</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ VIDEOS ══ -->
+  <section class="section section--surface" aria-labelledby="video-title">
+    <p class="section-label" aria-hidden="true">Moments forts</p>
+    <h2 class="section__title" id="video-title">Nos <em>Vidéos</em></h2>
+    <div class="video-scroll">
+      <div class="video-inner">
+        <div class="video-card">
+          <div class="video-card__thumb">
+            <video src="../../Marketing/Video/2026-04-03_video-match-01.mp4" preload="metadata" aria-label="Video match AGST - action de jeu"></video>
+            <div class="play-btn" onclick="playVideo(this)" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="video-card__body">
+            <div class="video-card__label">Match</div>
+            <div class="video-card__title">Séance d'entraînement</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-card__thumb">
+            <video src="../../Marketing/Video/2026-04-03_video-match-02.mp4" preload="metadata" aria-label="Video match AGST - sequence de jeu"></video>
+            <div class="play-btn" onclick="playVideo(this)" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="video-card__body">
+            <div class="video-card__label">Entraînement</div>
+            <div class="video-card__title">Technique & Jeu</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-card__thumb">
+            <video src="../../Marketing/Video/2026-04-03_video-match-03.mp4" preload="metadata" aria-label="Video entrainement AGST"></video>
+            <div class="play-btn" onclick="playVideo(this)" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="video-card__body">
+            <div class="video-card__label">Match</div>
+            <div class="video-card__title">Highlights du match</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-card__thumb">
+            <video src="../../Marketing/Video/2026-04-03_video-match-04.mp4" preload="metadata" aria-label="Video AGST - moment fort"></video>
+            <div class="play-btn" onclick="playVideo(this)" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="video-card__body">
+            <div class="video-card__label">Tournoi</div>
+            <div class="video-card__title">Compétition locale</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-card__thumb">
+            <video src="../../Marketing/Video/2026-04-04_video-match-01.mp4" preload="metadata" aria-label="Video match AGST - competition"></video>
+            <div class="play-btn" onclick="playVideo(this)" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="video-card__body">
+            <div class="video-card__label">Équipe</div>
+            <div class="video-card__title">Séance complète</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ MATCH RESULTS ══ -->
+  <section class="section" aria-labelledby="results-title">
+    <p class="section-label" aria-hidden="true">Sur le terrain</p>
+    <h2 class="section__title" id="results-title">Résultats <em>Récents</em></h2>
+    <div class="results-list">
+      <div class="result-card">
+        <div class="result-card__meta">
+          <span class="result-card__date">📅 Mars 2026 · Bamako</span>
+          <span class="result-card__badge result-card__badge--win">Victoire</span>
+        </div>
+        <div class="result-card__score">
+          <div class="result-card__team">
+            <div class="result-card__team-name result-card__team-name--agst">AGST</div>
+          </div>
+          <div class="result-card__goals">3 – 1</div>
+          <div class="result-card__team">
+            <div class="result-card__team-name">Adversaire</div>
+          </div>
+        </div>
+        <div class="result-card__cat">🔥 Minimes · Tournoi intercommunal</div>
+      </div>
+      <div class="result-card">
+        <div class="result-card__meta">
+          <span class="result-card__date">📅 Février 2026 · Bamako</span>
+          <span class="result-card__badge result-card__badge--draw">Nul</span>
+        </div>
+        <div class="result-card__score">
+          <div class="result-card__team">
+            <div class="result-card__team-name result-card__team-name--agst">AGST</div>
+          </div>
+          <div class="result-card__goals">2 – 2</div>
+          <div class="result-card__team">
+            <div class="result-card__team-name">Adversaire</div>
+          </div>
+        </div>
+        <div class="result-card__cat">🦅 Cadets · Match amical</div>
+      </div>
+      <div class="result-card">
+        <div class="result-card__meta">
+          <span class="result-card__date">📅 Janvier 2026 · Bamako</span>
+          <span class="result-card__badge result-card__badge--win">Victoire</span>
+        </div>
+        <div class="result-card__score">
+          <div class="result-card__team">
+            <div class="result-card__team-name result-card__team-name--agst">AGST</div>
+          </div>
+          <div class="result-card__goals">4 – 0</div>
+          <div class="result-card__team">
+            <div class="result-card__team-name">Adversaire</div>
+          </div>
+        </div>
+        <div class="result-card__cat">⚡ Benjamins · Tournoi de quartier</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PLAYER PROFILES ══ -->
+  <section class="section section--surface" aria-labelledby="profiles-title">
+    <p class="section-label" aria-hidden="true">Nos stars</p>
+    <h2 class="section__title" id="profiles-title">Profils <em>Joueurs</em></h2>
+    <div class="profiles-grid">
+      <div class="profile-card">
+        <img class="profile-card__photo"
+          src="../../Marketing/Image/2026-04-04_portrait-gardien-stance.jpeg"
+          alt="Gardien AGST en tenue blanche et bleue - portrait officiel" loading="lazy" />
+        <div class="profile-card__body">
+          <div class="profile-card__name">Gardien #1</div>
+          <div class="profile-card__tags">
+            <span class="profile-tag profile-tag--cat">🔥 Minimes</span>
+            <span class="profile-tag profile-tag--pos">Gardien</span>
+          </div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-card__placeholder" aria-hidden="true">⚡</div>
+        <div class="profile-card__body">
+          <div class="profile-card__name">Milieu #7</div>
+          <div class="profile-card__tags">
+            <span class="profile-tag profile-tag--cat">⚡ Benjamins</span>
+            <span class="profile-tag profile-tag--pos">Milieu</span>
+          </div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-card__placeholder" aria-hidden="true">🦅</div>
+        <div class="profile-card__body">
+          <div class="profile-card__name">Attaquant #9</div>
+          <div class="profile-card__tags">
+            <span class="profile-tag profile-tag--cat">🦅 Cadets</span>
+            <span class="profile-tag profile-tag--pos">Attaquant</span>
+          </div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-card__placeholder" aria-hidden="true">🐥</div>
+        <div class="profile-card__body">
+          <div class="profile-card__name">Défenseur #4</div>
+          <div class="profile-card__tags">
+            <span class="profile-tag profile-tag--cat">🐥 Poussins</span>
+            <span class="profile-tag profile-tag--pos">Défenseur</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="font-family:var(--font-body);font-size:12px;color:var(--text-light);margin-top:12px;font-style:italic;">* Les profils complets seront publiés avec l'accord des familles.</p>
+  </section>
+
+  <!-- ══ ALUMNI ══ -->
+  <section class="section" aria-labelledby="alumni-title">
+    <p class="section-label" aria-hidden="true">Là où ils vont</p>
+    <h2 class="section__title" id="alumni-title">Nos <em>Anciens</em></h2>
+    <div class="alumni-block">
+      <div class="alumni-block__icon" aria-hidden="true">🌟</div>
+      <div class="alumni-block__title">Nos Anciens Joueurs</div>
+      <p class="alumni-block__sub">Cette section présentera les joueurs qui ont intégré des clubs, des académies professionnelles ou qui poursuivent une carrière grâce à l'AGST. Les premières histoires de réussite arrivent bientôt.</p>
+      <span class="alumni-block__badge">📅 Bientôt disponible</span>
+    </div>
+  </section>
+
+  <!-- ══ CTA ══ -->
+  <section class="cta-section" aria-labelledby="cta-title">
+    <span class="cta-section__badge">⚽ Votre enfant peut être ici</span>
+    <h2 class="cta-section__title" id="cta-title">
+      Rejoignez<br />nos <em>champions</em>
+    </h2>
+    <p class="cta-section__sub">Formation gratuite · 5–15 ans · Bacodjicoroni, Bamako</p>
+    <div class="cta-section__btns">
+      <a href="rejoindre.html" class="btn btn--gold" aria-label="Inscrire mon enfant">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+        Inscrire mon enfant — Gratuit
+        <svg class="btn__arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="https://wa.me/22365418881?text=Bonjour%20AGST%2C%20je%20voudrais%20inscrire%20mon%20enfant"
+         class="btn btn--whatsapp" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        +223 65 41 88 81 · WhatsApp
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer__top">
+    <img class="footer__logo" src="../../Logo/Logo.jpeg" alt="AGST Logo" width="48" height="48" loading="lazy" />
+    <div><div class="footer__brand">AGST<span>Académie Globale Sportive Tigana</span></div></div>
+  </div>
+  <nav class="footer__links" aria-label="Liens du pied de page">
+    <a href="index.html">Accueil</a>
+    <a href="mission.html">Notre Mission</a>
+    <a href="programme.html">Notre Programme</a>
+    <a href="joueurs.html">Nos Joueurs</a>
+    <a href="actualites.html">Actualités</a>
+    <a href="rejoindre.html">Rejoindre l'AGST</a>
+  </nav>
+  <address class="footer__contact" style="font-style:normal;">
+    📍 Bacodjicoroni Rue 570 Porte 350, Bamako, Mali<br />
+    📱 <a href="https://wa.me/22365418881" target="_blank" rel="noopener noreferrer">+223 65 41 88 81 (WhatsApp)</a>
+  </address>
+  <p class="footer__legal">
+    <span class="receipt">Récépissé N° 0048/G.DB-CAB</span><br />
+    © 2024–2026 AGST — Académie Globale Sportive Tigana · Formation 100% gratuite
+  </p>
+</footer>
+
+<a class="whatsapp-float" href="https://wa.me/22365418881?text=Bonjour%20AGST" target="_blank" rel="noopener noreferrer" aria-label="Contacter l'AGST sur WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  // Nav menu
+  function openMenu()  { document.getElementById('navMenu').classList.add('open'); document.getElementById('menuBtn').setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; }
+  function closeMenu() { document.getElementById('navMenu').classList.remove('open'); document.getElementById('menuBtn').setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeMenu(); closeLightbox(); }
+  });
+
+  // Language
+  document.querySelectorAll('.lang-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.lang-toggle').querySelectorAll('button').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+      btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
+    });
+  });
+
+  // Gallery filter
+  const filterBtns = document.querySelectorAll('.filter-tab');
+  const photoItems = document.querySelectorAll('.photo-item');
+  const countEl    = document.getElementById('visibleCount');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      let count = 0;
+      photoItems.forEach(item => {
+        const show = f === 'all' || item.dataset.cat === f;
+        item.classList.toggle('hidden', !show);
+        if (show) count++;
+      });
+      countEl.textContent = count;
+    });
+  });
+
+  // Lightbox
+  let lbPhotos = [], lbIdx = 0;
+  function buildPhotoList() {
+    lbPhotos = [];
+    document.querySelectorAll('.photo-item:not(.hidden)').forEach(item => {
+      const img = item.querySelector('img');
+      if (img) lbPhotos.push({ src: img.src, alt: img.alt });
+    });
+  }
+  function openLightbox(idx) {
+    buildPhotoList();
+    lbIdx = idx;
+    showLbPhoto();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function showLbPhoto() {
+    const p = lbPhotos[lbIdx];
+    if (!p) return;
+    document.getElementById('lbImg').src = p.src;
+    document.getElementById('lbImg').alt = p.alt;
+    document.getElementById('lbCounter').textContent = (lbIdx + 1) + ' / ' + lbPhotos.length;
+  }
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+  document.getElementById('lbPrev').addEventListener('click', () => { lbIdx = (lbIdx - 1 + lbPhotos.length) % lbPhotos.length; showLbPhoto(); });
+  document.getElementById('lbNext').addEventListener('click', () => { lbIdx = (lbIdx + 1) % lbPhotos.length; showLbPhoto(); });
+  document.getElementById('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) closeLightbox(); });
+
+  // Wire photo items
+  document.querySelectorAll('.photo-item').forEach((item, i) => {
+    item.addEventListener('click', () => openLightbox(i));
+    item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(i); } });
+  });
+
+  // Video play (inline)
+  function playVideo(playBtn) {
+    const thumb = playBtn.parentElement;
+    const video = thumb.querySelector('video');
+    playBtn.style.display = 'none';
+    video.controls = true;
+    video.play();
+  }
+</script>
+</body>
+</html>

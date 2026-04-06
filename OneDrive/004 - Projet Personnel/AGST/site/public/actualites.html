@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Actualités — AGST Académie Globale Sportive Tigana</title>
+  <meta name="description" content="Suivez les actualités de l'AGST — résultats de matchs, profils de joueurs, conseils pour parents et annonces de l'académie à Bamako." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green:       #1A7A3C;
+      --green-dark:  #0F5429;
+      --gold:        #F5A623;
+      --gold-dark:   #D4891B;
+      --navy:        #0D1B48;
+      --orange:      #F4511E;
+      --white:       #FFFFFF;
+      --warm-white:  #FAFAF7;
+      --surface:     #F0F4F0;
+      --text-dark:   #1A1A1A;
+      --text-mid:    #444444;
+      --text-light:  #888888;
+      --border:      #DDE8DD;
+      --radius-sm:   8px;
+      --radius-md:   12px;
+      --radius-pill: 100px;
+      --shadow-sm:   0 2px 8px rgba(0,0,0,0.08);
+      --shadow-md:   0 4px 20px rgba(0,0,0,0.14);
+      --font-head:   'Oswald', sans-serif;
+      --font-body:   'Inter', sans-serif;
+      --max-w:       480px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--warm-white); color: var(--text-dark); max-width: var(--max-w); margin: 0 auto; overflow-x: hidden; }
+    img  { display: block; max-width: 100%; height: auto; }
+    a    { text-decoration: none; color: inherit; }
+    ul   { list-style: none; }
+
+    .section-label { font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+
+    /* ── NAVBAR ── */
+    .navbar { position: sticky; top: 0; z-index: 100; background: var(--navy); padding: 0 16px; height: 56px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-md); }
+    .navbar__logo { display: flex; align-items: center; gap: 10px; }
+    .navbar__logo img { height: 38px; width: 38px; object-fit: contain; border-radius: 4px; }
+    .navbar__brand { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--white); line-height: 1.1; }
+    .navbar__brand span { display: block; font-size: 10px; font-weight: 400; color: var(--gold); font-family: var(--font-body); }
+    .navbar__actions { display: flex; align-items: center; gap: 8px; }
+    .lang-toggle { display: flex; background: rgba(255,255,255,0.1); border-radius: var(--radius-pill); overflow: hidden; }
+    .lang-toggle button { border: none; background: transparent; color: rgba(255,255,255,0.6); font-family: var(--font-body); font-size: 10px; font-weight: 600; padding: 4px 7px; cursor: pointer; transition: all 0.2s; }
+    .lang-toggle button.active { background: var(--gold); color: var(--navy); border-radius: var(--radius-pill); }
+    .menu-btn { background: none; border: none; cursor: pointer; padding: 4px; display: flex; flex-direction: column; gap: 5px; }
+    .menu-btn span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px; }
+
+    /* ── NAV OVERLAY ── */
+    .nav-menu { display: none; position: fixed; inset: 0; background: var(--navy); z-index: 200; flex-direction: column; }
+    .nav-menu.open { display: flex; }
+    .nav-menu__header { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .nav-menu__close { background: none; border: none; color: var(--white); font-size: 24px; cursor: pointer; padding: 4px; }
+    .nav-menu__links { flex: 1; padding: 24px 16px; display: flex; flex-direction: column; gap: 4px; }
+    .nav-menu__links a { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.7); padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07); text-transform: uppercase; transition: color 0.2s; }
+    .nav-menu__links a:hover, .nav-menu__links a.active { color: var(--gold); }
+    .nav-menu__footer { padding: 20px 16px; border-top: 1px solid rgba(255,255,255,0.1); }
+
+    /* ── HERO ── */
+    .hero { position: relative; min-height: 260px; overflow: hidden; }
+    .hero__bg { width: 100%; height: 260px; object-fit: cover; object-position: center 30%; display: block; }
+    .hero__overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(13,27,72,0.2) 0%, rgba(10,60,28,0.88) 100%); }
+    .hero__content { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 20px 24px; }
+    .hero__breadcrumb { display: flex; align-items: center; gap: 6px; font-family: var(--font-body); font-size: 11px; color: rgba(255,255,255,0.55); margin-bottom: 10px; }
+    .hero__breadcrumb a { color: rgba(255,255,255,0.55); }
+    .hero__breadcrumb span { color: var(--gold); font-weight: 600; }
+    .hero__headline { font-family: var(--font-head); font-size: 44px; font-weight: 700; color: var(--white); line-height: 1.0; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero__headline em { color: var(--gold); font-style: normal; }
+    .hero__sub { font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.8); }
+
+    /* ── SECTIONS ── */
+    .section { padding: 28px 16px; }
+    .section--surface { background: var(--surface); }
+    .section__title { font-family: var(--font-head); font-size: 26px; font-weight: 700; color: var(--navy); text-transform: uppercase; line-height: 1.1; margin-bottom: 4px; }
+    .section__title em { color: var(--green); font-style: normal; }
+    .section__sub { font-family: var(--font-body); font-size: 13px; color: var(--text-mid); margin-bottom: 18px; line-height: 1.6; }
+
+    /* ── FILTER TABS ── */
+    .filter-tabs { display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-bottom: 20px; padding-bottom: 2px; }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    .filter-tab { flex-shrink: 0; padding: 7px 14px; border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 12px; font-weight: 600; cursor: pointer; border: 2px solid var(--border); background: var(--white); color: var(--text-mid); transition: all 0.2s; }
+    .filter-tab.active { background: var(--green); color: var(--white); border-color: var(--green); }
+
+    /* ── CATEGORY BADGES ── */
+    .cat-badge { display: inline-block; padding: 3px 9px; border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .cat-badge--match    { background: rgba(26,122,60,0.12); color: var(--green); }
+    .cat-badge--tournoi  { background: rgba(245,166,35,0.15); color: var(--gold-dark); }
+    .cat-badge--profil   { background: rgba(13,27,72,0.1); color: var(--navy); }
+    .cat-badge--conseil  { background: rgba(244,81,30,0.1); color: var(--orange); }
+    .cat-badge--annonce  { background: rgba(37,211,102,0.12); color: #1a7a3c; }
+
+    /* ── FEATURED ARTICLE ── */
+    .featured-article { background: var(--white); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md); margin-bottom: 28px; }
+    .featured-article__img-wrap { position: relative; height: 200px; overflow: hidden; }
+    .featured-article__img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .featured-article:hover .featured-article__img-wrap img { transform: scale(1.03); }
+    .featured-article__date-badge { position: absolute; top: 12px; left: 12px; background: var(--navy); color: var(--white); border-radius: var(--radius-sm); padding: 4px 10px; font-family: var(--font-body); font-size: 11px; font-weight: 600; }
+    .featured-article__tag { position: absolute; top: 12px; right: 12px; }
+    .featured-article__body { padding: 16px; }
+    .featured-article__title { font-family: var(--font-head); font-size: 20px; font-weight: 700; color: var(--navy); text-transform: uppercase; line-height: 1.15; margin-bottom: 8px; }
+    .featured-article__excerpt { font-family: var(--font-body); font-size: 13px; color: var(--text-mid); line-height: 1.65; margin-bottom: 14px; }
+    .featured-article__footer { display: flex; align-items: center; justify-content: space-between; }
+    .featured-article__author { display: flex; align-items: center; gap: 8px; }
+    .featured-article__author-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; font-weight: 700; font-family: var(--font-head); }
+    .featured-article__author-name { font-family: var(--font-body); font-size: 11px; color: var(--text-light); }
+    .read-more-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 16px; border-radius: var(--radius-pill); background: var(--green); color: var(--white); font-family: var(--font-head); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: background 0.2s; }
+    .read-more-btn:hover { background: var(--green-dark); }
+
+    /* ── ARTICLE LIST ── */
+    .articles-list { display: flex; flex-direction: column; gap: 12px; }
+    .article-card { background: var(--white); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; gap: 0; }
+    .article-card__img-wrap { width: 110px; flex-shrink: 0; position: relative; overflow: hidden; }
+    .article-card__img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 100px; transition: transform 0.3s ease; }
+    .article-card:hover .article-card__img-wrap img { transform: scale(1.05); }
+    .article-card__body { flex: 1; padding: 12px 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; }
+    .article-card__meta { display: flex; align-items: center; gap: 6px; }
+    .article-card__date { font-family: var(--font-body); font-size: 10px; color: var(--text-light); }
+    .article-card__title { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--navy); text-transform: uppercase; line-height: 1.2; }
+    .article-card__excerpt { font-family: var(--font-body); font-size: 12px; color: var(--text-mid); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .article-card__link { font-family: var(--font-body); font-size: 11px; font-weight: 600; color: var(--green); display: inline-flex; align-items: center; gap: 3px; }
+    .article-card.hidden { display: none; }
+
+    /* ── LOAD MORE ── */
+    .load-more-wrap { text-align: center; padding: 20px 0 4px; }
+    .load-more-btn { display: inline-flex; align-items: center; gap: 7px; padding: 12px 24px; border-radius: var(--radius-pill); border: 2px solid var(--border); background: var(--white); color: var(--text-mid); font-family: var(--font-head); font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .load-more-btn:hover { border-color: var(--green); color: var(--green); background: rgba(26,122,60,0.04); }
+
+    /* ── NEWSLETTER ── */
+    .newsletter-section { background: linear-gradient(135deg, var(--navy), #1A2B5C); padding: 36px 20px; text-align: center; }
+    .newsletter-section__icon { font-size: 36px; margin-bottom: 12px; }
+    .newsletter-section__title { font-family: var(--font-head); font-size: 26px; font-weight: 700; color: var(--white); text-transform: uppercase; line-height: 1.1; margin-bottom: 8px; }
+    .newsletter-section__title em { color: var(--gold); font-style: normal; }
+    .newsletter-section__sub { font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 20px; }
+    .newsletter-form { display: flex; flex-direction: column; gap: 10px; }
+    .newsletter-input { width: 100%; padding: 13px 16px; border-radius: var(--radius-pill); border: 2px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: var(--white); font-family: var(--font-body); font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .newsletter-input::placeholder { color: rgba(255,255,255,0.4); }
+    .newsletter-input:focus { border-color: var(--gold); }
+    .newsletter-btn { width: 100%; padding: 14px 20px; border-radius: var(--radius-pill); border: none; background: var(--gold); color: var(--navy); font-family: var(--font-head); font-size: 15px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 14px rgba(245,166,35,0.35); }
+    .newsletter-btn:hover { background: var(--gold-dark); }
+    .newsletter-notice { font-family: var(--font-body); font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 8px; }
+
+    /* ── CTA SECTION ── */
+    .cta-section { padding: 32px 16px; text-align: center; background: var(--surface); }
+    .cta-section__title { font-family: var(--font-head); font-size: 24px; font-weight: 700; color: var(--navy); text-transform: uppercase; line-height: 1.1; margin-bottom: 8px; }
+    .cta-section__sub { font-family: var(--font-body); font-size: 13px; color: var(--text-mid); margin-bottom: 20px; line-height: 1.6; }
+    .cta-buttons { display: flex; flex-direction: column; gap: 10px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 24px; border-radius: var(--radius-pill); font-family: var(--font-head); font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; border: none; transition: all 0.2s; text-decoration: none; }
+    .btn--gold { background: var(--gold); color: var(--navy); box-shadow: 0 4px 14px rgba(245,166,35,0.35); }
+    .btn--gold:hover { background: var(--gold-dark); transform: translateY(-1px); }
+    .btn--whatsapp { background: #25D366; color: var(--white); }
+    .btn--whatsapp:hover { background: #1ebe5a; transform: translateY(-1px); }
+
+    /* ── FOOTER ── */
+    .footer { background: var(--navy); padding: 28px 16px 20px; }
+    .footer__logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .footer__logo img { height: 44px; width: 44px; object-fit: contain; border-radius: 4px; }
+    .footer__brand { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--white); line-height: 1.1; }
+    .footer__brand span { display: block; font-size: 11px; font-weight: 400; color: var(--gold); font-family: var(--font-body); }
+    .footer__links { display: flex; flex-wrap: wrap; gap: 4px 0; margin-bottom: 16px; }
+    .footer__links a { font-family: var(--font-body); font-size: 12px; color: rgba(255,255,255,0.55); padding: 3px 0; transition: color 0.2s; width: 50%; }
+    .footer__links a:hover { color: var(--gold); }
+    .footer__info { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; }
+    .footer__address { font-family: var(--font-body); font-size: 11px; color: rgba(255,255,255,0.45); line-height: 1.6; margin-bottom: 8px; }
+    .footer__legal { font-family: var(--font-body); font-size: 10px; color: rgba(255,255,255,0.3); }
+    /* ── FLOATING WHATSAPP ── */
+    .float-wa { position: fixed; bottom: 20px; right: 16px; z-index: 90; width: 52px; height: 52px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(37,211,102,0.45); transition: transform 0.2s; }
+    .float-wa:hover { transform: scale(1.08); }
+    .float-wa svg { width: 28px; height: 28px; color: white; }
+
+    /* ═══ DESKTOP RESPONSIVE ═══ */
+    @media (min-width: 900px) {
+      body { max-width: 100%; }
+
+      /* Navbar */
+      .navbar { padding: 0 clamp(24px, 5vw, 72px); height: 64px; }
+      .menu-btn { display: none; }
+      .nav-menu {
+        display: flex !important;
+        position: static;
+        top: auto; left: auto; right: auto; bottom: auto;
+        background: transparent;
+        flex-direction: row;
+        align-items: center;
+        z-index: auto;
+        flex: 1;
+        justify-content: center;
+      }
+      .nav-menu__header, .nav-menu__footer { display: none; }
+      .nav-menu__links { flex: none; flex-direction: row; padding: 0; gap: 0; }
+      .nav-menu__links a { font-size: 12px; font-weight: 600; padding: 8px 12px; border-bottom: none; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.3px; }
+      .nav-menu__links a:hover, .nav-menu__links a.active { color: var(--gold); }
+
+      /* Hero */
+      .hero { min-height: 380px; }
+      .hero__content { padding-left: clamp(40px, 6vw, 100px); padding-right: clamp(40px, 6vw, 100px); padding-bottom: 44px; }
+      .hero__headline { font-size: 68px; }
+
+      /* Sections */
+      .section { padding: 56px clamp(32px, 5vw, 80px); max-width: 1280px; margin-left: auto; margin-right: auto; }
+      .section--surface { padding: 56px 0; }
+      .section--surface > * { max-width: 1280px; margin-left: auto; margin-right: auto; padding-left: clamp(32px, 5vw, 80px); padding-right: clamp(32px, 5vw, 80px); }
+      .section__title { font-size: 36px; }
+
+      /* Featured article: horizontal layout */
+      .featured-article { display: grid; grid-template-columns: 420px 1fr; }
+      .featured-article__img-wrap { height: 100%; min-height: 260px; }
+      .featured-article__img-wrap img { height: 100%; }
+
+      /* Articles list: 2-column grid */
+      .articles-list { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .article-card__img-wrap { width: 130px; }
+
+      /* Newsletter: row layout */
+      .newsletter-section { padding: 48px clamp(32px, 5vw, 80px); }
+      .newsletter-form { flex-direction: row; max-width: 560px; margin: 0 auto; }
+      .newsletter-input { border-radius: var(--radius-pill) 0 0 var(--radius-pill); }
+      .newsletter-btn { width: auto; white-space: nowrap; border-radius: 0 var(--radius-pill) var(--radius-pill) 0; }
+      .newsletter-section__sub { max-width: 480px; margin-left: auto; margin-right: auto; }
+
+      /* Footer links */
+      .footer__links a { width: auto; }
+      .footer__links { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+
+      /* CTA section */
+      .cta-section { padding: 60px clamp(32px, 5vw, 80px); max-width: 1280px; margin-left: auto; margin-right: auto; }
+      .cta-buttons { flex-direction: row; justify-content: center; gap: 16px; }
+      .cta-buttons .btn { flex: 0 1 auto; min-width: 220px; }
+
+      /* Footer */
+      .footer { padding: 48px clamp(32px, 5vw, 80px) 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar" role="navigation" aria-label="Navigation principale">
+  <a class="navbar__logo" href="index.html" aria-label="AGST — Accueil">
+    <img src="../../Logo/Logo.jpeg" alt="Logo AGST" />
+    <div class="navbar__brand">AS TIGANA<span>Académie Globale Sportive</span></div>
+  </a>
+  <div class="navbar__actions">
+    <div class="lang-toggle" role="group" aria-label="Langue">
+      <button class="active" aria-pressed="true">FR</button>
+      <button aria-pressed="false">EN</button>
+      <button aria-pressed="false">BM</button>
+    </div>
+    <button class="menu-btn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navMenu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── NAV OVERLAY ── -->
+<div class="nav-menu" id="navMenu" role="dialog" aria-label="Menu principal" aria-modal="true">
+  <div class="nav-menu__header">
+    <a class="navbar__logo" href="index.html">
+      <img src="../../Logo/Logo.jpeg" alt="Logo AGST" />
+      <div class="navbar__brand">AS TIGANA<span>Académie Globale Sportive</span></div>
+    </a>
+    <button class="nav-menu__close" aria-label="Fermer le menu" onclick="toggleMenu()">✕</button>
+  </div>
+  <nav class="nav-menu__links">
+    <a href="index.html">Accueil</a>
+    <a href="mission.html">Notre Mission</a>
+    <a href="programme.html">Programme</a>
+    <a href="joueurs.html">Nos Joueurs</a>
+    <a href="actualites.html" class="active" aria-current="page">Actualités</a>
+    <a href="rejoindre.html">Rejoindre l'AGST</a>
+  </nav>
+  <div class="nav-menu__footer">
+    <a href="https://wa.me/22365418881?text=Bonjour%20AGST%2C%20je%20voudrais%20des%20informations" class="btn btn--whatsapp" style="width:100%;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+</div>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <img class="hero__bg" src="../../Marketing/Image/2026-04-04_equipe-blanche-groupe-alt.jpeg" alt="Equipe AGST en tenue blanche - photo de groupe au stade" loading="eager" />
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <div class="hero__breadcrumb">
+      <a href="index.html">Accueil</a>
+      <span>›</span>
+      <span>Actualités</span>
+    </div>
+    <h1 class="hero__headline">Actu<em>alités</em></h1>
+    <p class="hero__sub">Matchs · Tournois · Profils · Annonces</p>
+  </div>
+</header>
+
+<!-- ── FILTER TABS ── -->
+<section class="section" style="padding-bottom: 4px;">
+  <p class="section-label">Parcourir par catégorie</p>
+  <div class="filter-tabs" role="tablist" aria-label="Filtrer les articles">
+    <button class="filter-tab active" data-cat="all" role="tab" aria-selected="true">Tous</button>
+    <button class="filter-tab" data-cat="match" role="tab" aria-selected="false">Match</button>
+    <button class="filter-tab" data-cat="tournoi" role="tab" aria-selected="false">Tournoi</button>
+    <button class="filter-tab" data-cat="profil" role="tab" aria-selected="false">Profil joueur</button>
+    <button class="filter-tab" data-cat="conseil" role="tab" aria-selected="false">Conseil parent</button>
+    <button class="filter-tab" data-cat="annonce" role="tab" aria-selected="false">Annonce</button>
+  </div>
+</section>
+
+<!-- ── FEATURED ARTICLE ── -->
+<section class="section" style="padding-top: 12px;">
+  <p class="section-label">À la une</p>
+
+  <article class="featured-article" data-cat="match">
+    <div class="featured-article__img-wrap">
+      <img src="../../Marketing/Image/2026-04-04_duo-joueurs-stade-principal.jpeg" alt="Deux joueurs au stade principal de Bamako" loading="lazy" />
+      <div class="featured-article__date-badge">5 Avril 2026</div>
+      <div class="featured-article__tag"><span class="cat-badge cat-badge--match">Match</span></div>
+    </div>
+    <div class="featured-article__body">
+      <h2 class="featured-article__title">Victoire 3–1 contre les Étoiles FC — Les Minimes brillent !</h2>
+      <p class="featured-article__excerpt">Une performance remarquable de nos Minimes ce samedi face aux Étoiles FC au terrain de Bacodjicoroni. Buts de Sékou (2) et Amadou, dans un match dominé de bout en bout par nos jeunes joueurs. L'entraîneur Diallo salue "l'effort collectif et la discipline tactique" de l'équipe.</p>
+      <div class="featured-article__footer">
+        <div class="featured-article__author">
+          <div class="featured-article__author-avatar">AT</div>
+          <span class="featured-article__author-name">Équipe AGST</span>
+        </div>
+        <a href="#" class="read-more-btn" aria-label="Lire la suite de cet article">
+          Lire la suite
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M1 8a.5.5 0 01.5-.5h11.793l-3.147-3.146a.5.5 0 01.708-.708l4 4a.5.5 0 010 .708l-4 4a.5.5 0 01-.708-.708L13.293 8.5H1.5A.5.5 0 011 8z"/></svg>
+        </a>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── ARTICLES LIST ── -->
+  <div class="articles-list" id="articlesList">
+
+    <!-- Article 2: Tournoi -->
+    <article class="article-card" data-cat="tournoi">
+      <div class="article-card__img-wrap">
+        <img src="../../Marketing/Image/2026-04-04_equipe-blanche-groupe-v3.jpeg" alt="Equipe AGST en tenue blanche - photo officielle" loading="lazy" />
+      </div>
+      <div class="article-card__body">
+        <div class="article-card__meta">
+          <span class="cat-badge cat-badge--tournoi">Tournoi</span>
+          <span class="article-card__date">3 Avr. 2026</span>
+        </div>
+        <h3 class="article-card__title">Tournoi de Bamako : AGST qualifiée pour les demi-finales</h3>
+        <p class="article-card__excerpt">Après une phase de groupes sans faute, nos Cadets et Benjamins sont qualifiés pour le tour suivant du Tournoi Inter-Académies de Bamako.</p>
+        <a href="#" class="article-card__link" aria-label="Lire l'article sur le tournoi">Lire →</a>
+      </div>
+    </article>
+
+    <!-- Article 3: Profil joueur -->
+    <article class="article-card" data-cat="profil">
+      <div class="article-card__img-wrap">
+        <img src="../../Marketing/Image/2026-04-04_portrait-gardien-stance.jpeg" alt="Gardien AGST en tenue blanche et bleue - portrait officiel" loading="lazy" />
+      </div>
+      <div class="article-card__body">
+        <div class="article-card__meta">
+          <span class="cat-badge cat-badge--profil">Profil joueur</span>
+          <span class="article-card__date">2 Avr. 2026</span>
+        </div>
+        <h3 class="article-card__title">Spotlight : Moussa, gardien des Cadets</h3>
+        <p class="article-card__excerpt">À 14 ans, Moussa est déjà le pilier défensif des Cadets. Un tempérament, une présence dans les buts et une résilience qui impressionnent les coaches.</p>
+        <a href="#" class="article-card__link" aria-label="Lire le profil de Moussa">Lire →</a>
+      </div>
+    </article>
+
+    <!-- Article 4: Conseil parent -->
+    <article class="article-card" data-cat="conseil">
+      <div class="article-card__img-wrap">
+        <img src="../../Marketing/Image/2026-04-04_portrait-joueur-blanc-bleu.jpeg" alt="Joueur AGST en tenue blanche et bleue - portrait" loading="lazy" />
+      </div>
+      <div class="article-card__body">
+        <div class="article-card__meta">
+          <span class="cat-badge cat-badge--conseil">Conseil parent</span>
+          <span class="article-card__date">30 Mars 2026</span>
+        </div>
+        <h3 class="article-card__title">Comment soutenir votre enfant sportif sans pression</h3>
+        <p class="article-card__excerpt">Encouragement sain, équilibre scolaire et confiance en soi : nos coaches partagent leurs conseils pour accompagner votre enfant dans sa progression.</p>
+        <a href="#" class="article-card__link" aria-label="Lire les conseils pour parents">Lire →</a>
+      </div>
+    </article>
+
+    <!-- Article 5: Match -->
+    <article class="article-card" data-cat="match">
+      <div class="article-card__img-wrap">
+        <img src="../../Marketing/Image/2026-04-03_affiche-newyear-agst.jpeg" alt="Affiche Bonne Annee 2026 - AGST" loading="lazy" />
+      </div>
+      <div class="article-card__body">
+        <div class="article-card__meta">
+          <span class="cat-badge cat-badge--match">Match</span>
+          <span class="article-card__date">28 Mars 2026</span>
+        </div>
+        <h3 class="article-card__title">AGST Benjamins : 4–0, une démonstration de jeu collectif</h3>
+        <p class="article-card__excerpt">Les Benjamins ont livré un match parfait face au FC Magnambougou. Quatre buts, zéro encaissé, et un jeu collectif qui a épaté le public présent.</p>
+        <a href="#" class="article-card__link" aria-label="Lire le rapport du match Benjamins">Lire →</a>
+      </div>
+    </article>
+
+    <!-- Article 6: Annonce -->
+    <article class="article-card" data-cat="annonce">
+      <div class="article-card__img-wrap">
+        <img src="../../Marketing/Image/2026-04-04_equipe-rouge-jeunesse.jpeg" alt="Jeunes joueurs AGST en tenue rouge" loading="lazy" />
+      </div>
+      <div class="article-card__body">
+        <div class="article-card__meta">
+          <span class="cat-badge cat-badge--annonce">Annonce</span>
+          <span class="article-card__date">25 Mars 2026</span>
+        </div>
+        <h3 class="article-card__title">Inscriptions ouvertes pour la saison 2026 — C'est 100% gratuit</h3>
+        <p class="article-card__excerpt">L'AGST ouvre ses portes aux nouveaux talents pour la saison 2026. Toutes les catégories d'âge acceptent des inscriptions, sans aucun frais.</p>
+        <a href="rejoindre.html" class="article-card__link" aria-label="S'inscrire à l'AGST">S'inscrire →</a>
+      </div>
+    </article>
+
+    <!-- Article 7: Profil -->
+    <article class="article-card" data-cat="profil">
+      <div class="article-card__img-wrap">
+        <img src="../../Marketing/Image/2026-04-04_ceremonie-equipes-multiples.jpeg" alt="Equipes en ligne lors d une ceremonie de tournoi" loading="lazy" />
+      </div>
+      <div class="article-card__body">
+        <div class="article-card__meta">
+          <span class="cat-badge cat-badge--profil">Profil joueur</span>
+          <span class="article-card__date">20 Mars 2026</span>
+        </div>
+        <h3 class="article-card__title">Ibrahim, 8 ans, la révélation des Poussins cette saison</h3>
+        <p class="article-card__excerpt">Technicité hors norme et sourire communicatif : Ibrahim est déjà l'un des profils les plus prometteurs des Poussins, selon son entraîneur.</p>
+        <a href="#" class="article-card__link" aria-label="Lire le profil d'Ibrahim">Lire →</a>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- Load more -->
+  <div class="load-more-wrap">
+    <button class="load-more-btn" onclick="loadMore(this)" aria-label="Charger plus d'articles">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg>
+      Charger plus d'articles
+    </button>
+  </div>
+</section>
+
+<!-- ── NEWSLETTER ── -->
+<section class="newsletter-section" aria-labelledby="newsletter-title">
+  <div class="newsletter-section__icon" aria-hidden="true">📬</div>
+  <h2 class="newsletter-section__title" id="newsletter-title">Restez <em>informés</em></h2>
+  <p class="newsletter-section__sub">Recevez les résultats, annonces et profils de joueurs directement sur WhatsApp ou par email.</p>
+  <form class="newsletter-form" onsubmit="handleNewsletter(event)" novalidate>
+    <input class="newsletter-input" type="email" name="email" placeholder="Votre adresse email" autocomplete="email" aria-label="Adresse email" />
+    <button class="newsletter-btn" type="submit">S'abonner aux actualités</button>
+  </form>
+  <p class="newsletter-notice">Ou rejoignez notre groupe WhatsApp pour des mises à jour instantanées.</p>
+  <a href="https://wa.me/22365418881?text=Bonjour%20AGST%2C%20je%20veux%20rejoindre%20le%20groupe%20actualités" class="btn btn--whatsapp" style="margin-top: 14px; width: 100%;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Rejoindre le groupe WhatsApp
+  </a>
+</section>
+
+<!-- ── CTA SECTION ── -->
+<section class="cta-section" aria-labelledby="cta-title">
+  <p class="section-label">Prêt à rejoindre l'aventure ?</p>
+  <h2 class="cta-section__title" id="cta-title">Inscrivez votre enfant</h2>
+  <p class="cta-section__sub">Formation gratuite pour les 5–15 ans. Entraînements structurés, valeurs humaines, excellence sportive.</p>
+  <div class="cta-buttons">
+    <a href="rejoindre.html" class="btn btn--gold">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/></svg>
+      Inscrire mon enfant — C'est gratuit
+    </a>
+    <a href="https://wa.me/22365418881?text=Bonjour%20AGST%2C%20j'ai%20une%20question%20sur%20les%20actualités" class="btn btn--whatsapp" target="_blank" rel="noopener">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Nous contacter sur WhatsApp
+    </a>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer" role="contentinfo">
+  <div class="footer__logo">
+    <img src="../../Logo/Logo.jpeg" alt="Logo AGST" />
+    <div class="footer__brand">AS TIGANA<span>Académie Globale Sportive Tigana</span></div>
+  </div>
+  <nav class="footer__links" aria-label="Navigation footer">
+    <a href="index.html">Accueil</a>
+    <a href="mission.html">Notre Mission</a>
+    <a href="programme.html">Programme</a>
+    <a href="joueurs.html">Nos Joueurs</a>
+    <a href="actualites.html" aria-current="page">Actualités</a>
+    <a href="rejoindre.html">Rejoindre l'AGST</a>
+  </nav>
+  <div class="footer__info">
+    <p class="footer__address">Bacodjicoroni Rue 570 Porte 350, Bamako, Mali<br />WhatsApp : +223 65 41 88 81</p>
+    <p class="footer__legal">Récépissé N° 0048/G.DB-CAB · Association sportive enregistrée · Bamako, Mali</p>
+  </div>
+</footer>
+
+<!-- ── FLOATING WHATSAPP ── -->
+<a class="float-wa" href="https://wa.me/22365418881?text=Bonjour%20AGST%2C%20j'ai%20une%20question" target="_blank" rel="noopener" aria-label="Contacter l'AGST sur WhatsApp">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  /* ── NAV MENU ── */
+  function toggleMenu() {
+    const menu = document.getElementById('navMenu');
+    const btn = document.querySelector('.menu-btn');
+    const isOpen = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('navMenu').classList.contains('open')) toggleMenu();
+  });
+
+  /* ── FILTER TABS ── */
+  const filterBtns = document.querySelectorAll('.filter-tab');
+  const articleCards = document.querySelectorAll('.article-card, .featured-article');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+
+      const cat = btn.dataset.cat;
+      articleCards.forEach(card => {
+        const show = cat === 'all' || card.dataset.cat === cat;
+        card.classList.toggle('hidden', !show);
+      });
+    });
+  });
+
+  /* ── LOAD MORE (placeholder) ── */
+  function loadMore(btn) {
+    btn.disabled = true;
+    btn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg>
+      Chargement…
+    `;
+    setTimeout(() => {
+      btn.style.display = 'none';
+      const noMore = document.createElement('p');
+      noMore.style.cssText = 'text-align:center;font-family:var(--font-body);font-size:12px;color:var(--text-light);padding:8px 0;';
+      noMore.textContent = 'Tous les articles ont été chargés.';
+      btn.parentElement.appendChild(noMore);
+    }, 1000);
+  }
+
+  /* ── NEWSLETTER ── */
+  function handleNewsletter(e) {
+    e.preventDefault();
+    const input = e.target.querySelector('input[type="email"]');
+    const btn = e.target.querySelector('button');
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) {
+      input.style.borderColor = '#F4511E';
+      input.focus();
+      return;
+    }
+    btn.textContent = '✓ Inscription enregistrée !';
+    btn.style.background = 'var(--green)';
+    btn.disabled = true;
+    input.disabled = true;
+  }
+</script>
+</body>
+</html>
