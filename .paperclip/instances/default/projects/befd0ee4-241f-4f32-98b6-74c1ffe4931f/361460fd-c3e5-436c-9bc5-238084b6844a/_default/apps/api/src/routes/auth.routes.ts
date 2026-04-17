@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { supabaseAdmin } from "../lib/supabase.js";
+import { supabase } from "../lib/supabase.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 import { requireRole } from "../middleware/role.middleware.js";
 
@@ -17,7 +17,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const { data, error } = await supabaseAdmin.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
@@ -27,7 +27,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const { data: profile } = await supabaseAdmin
+  const { data: profile } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", data.user.id)
@@ -80,7 +80,7 @@ router.post(
     }
 
     const { data: authData, error: authError } =
-      await supabaseAdmin.auth.admin.createUser({
+      await supabase.auth.admin.createUser({
         email,
         password,
         email_confirm: true,
@@ -92,7 +92,7 @@ router.post(
       return;
     }
 
-    const { error: profileError } = await supabaseAdmin
+    const { error: profileError } = await supabase
       .from("profiles")
       .insert({
         id: authData.user.id,
@@ -102,8 +102,7 @@ router.post(
       });
 
     if (profileError) {
-      // Rollback: delete the auth user if profile insert fails
-      await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
+      await supabase.auth.admin.deleteUser(authData.user.id);
       res.status(500).json({ error: "Failed to create user profile" });
       return;
     }
@@ -129,7 +128,7 @@ router.get(
   async (req: Request, res: Response): Promise<void> => {
     const userId = req.user!.id;
 
-    const { data: profile, error } = await supabaseAdmin
+    const { data: profile, error } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", userId)
