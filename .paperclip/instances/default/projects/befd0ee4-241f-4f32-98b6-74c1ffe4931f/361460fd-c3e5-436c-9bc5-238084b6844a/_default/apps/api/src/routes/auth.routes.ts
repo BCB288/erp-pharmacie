@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { supabase } from "../lib/supabase.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 import { requireRole } from "../middleware/role.middleware.js";
+import { asyncHandler } from "../middleware/error.middleware.js";
 
 const router = Router();
 
@@ -9,7 +10,7 @@ const router = Router();
  * POST /api/auth/login
  * Public — authenticate with email + password via Supabase Auth.
  */
-router.post("/login", async (req: Request, res: Response): Promise<void> => {
+router.post("/login", asyncHandler(async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -51,7 +52,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
       expires_at: data.session.expires_at,
     },
   });
-});
+}));
 
 /**
  * POST /api/auth/register
@@ -61,7 +62,7 @@ router.post(
   "/register",
   authMiddleware,
   requireRole("admin"),
-  async (req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { email, password, full_name, role, phone } = req.body;
 
     if (!email || !password || !full_name || !role) {
@@ -115,7 +116,7 @@ router.post(
         role,
       },
     });
-  }
+  })
 );
 
 /**
@@ -125,7 +126,7 @@ router.post(
 router.get(
   "/me",
   authMiddleware,
-  async (req: Request, res: Response): Promise<void> => {
+  asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user!.id;
 
     const { data: profile, error } = await supabase
@@ -148,7 +149,7 @@ router.get(
       is_active: profile.is_active,
       created_at: profile.created_at,
     });
-  }
+  })
 );
 
 export default router;
