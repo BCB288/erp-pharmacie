@@ -1,26 +1,57 @@
 import { useState, type FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { useAuth } from '../../hooks/useAuth'
+import type { UserRole } from '../../types'
+
+function defaultRouteForRole(role: UserRole): string {
+  switch (role) {
+    case 'cashier':
+      return '/pos'
+    case 'pharmacist':
+      return '/inventory'
+    case 'admin':
+      return '/'
+  }
+}
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const { session, profile, loading } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+
+  // Redirect authenticated users away from the login page
+  if (!loading && session && profile) {
+    return <Navigate to={defaultRouteForRole(profile.role)} replace />
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError(null)
     setSubmitting(true)
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
 
-    if (error) {
-      setError(error.message)
+    if (signInError) {
+      setError(signInError.message)
       setSubmitting(false)
     } else {
-      navigate('/', { replace: true })
+      // Fetch profile to determine role-based redirect
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: prof } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+        const role: UserRole = prof?.role ?? 'cashier'
+        navigate(defaultRouteForRole(role), { replace: true })
+      } else {
+        navigate('/', { replace: true })
+      }
     }
   }
 
