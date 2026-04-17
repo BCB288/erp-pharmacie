@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { supabase } from '../../lib/supabase'
 
@@ -418,6 +419,7 @@ function PrescriptionDetailModal({
 
 export function PatientsPage() {
   const { profile } = useAuth()
+  const navigate = useNavigate()
   const canEdit = profile?.role === 'admin' || profile?.role === 'pharmacist'
 
   const [tab, setTab] = useState<Tab>('patients')
@@ -426,6 +428,8 @@ export function PatientsPage() {
   const [patients, setPatients] = useState<Patient[]>([])
   const [patientsLoading, setPatientsLoading] = useState(true)
   const [patientSearch, setPatientSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [editingPatient, setEditingPatient] = useState<Patient | null | 'new'>(null)
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null)
 
@@ -437,11 +441,20 @@ export function PatientsPage() {
   const [showRxModal, setShowRxModal] = useState(false)
   const [viewingRx, setViewingRx] = useState<Prescription | null>(null)
 
+  // Debounce search input
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(patientSearch)
+    }, 300)
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current) }
+  }, [patientSearch])
+
   const loadPatients = useCallback(async () => {
     setPatientsLoading(true)
     try {
       const params = new URLSearchParams()
-      if (patientSearch) params.set('search', patientSearch)
+      if (debouncedSearch) params.set('search', debouncedSearch)
       const res = await apiFetch<{ data: Patient[] }>(`/api/patients?${params}`)
       setPatients(res.data)
     } catch {
@@ -449,7 +462,7 @@ export function PatientsPage() {
     } finally {
       setPatientsLoading(false)
     }
-  }, [patientSearch])
+  }, [debouncedSearch])
 
   const loadPrescriptions = useCallback(async () => {
     setPrescriptionsLoading(true)
@@ -542,7 +555,11 @@ export function PatientsPage() {
               <tbody>
                 {patients.map(p => (
                   <tr key={p.id} className="border-b hover:bg-gray-50">
-                    <td className="py-2 font-medium">{p.last_name} {p.first_name}</td>
+                    <td className="py-2 font-medium">
+                      <button onClick={() => navigate(`/patients/${p.id}`)} className="text-blue-600 hover:underline">
+                        {p.last_name} {p.first_name}
+                      </button>
+                    </td>
                     <td className="py-2">{p.date_of_birth ?? '-'}</td>
                     <td className="py-2">{p.phone ?? '-'}</td>
                     <td className="py-2">{p.email ?? '-'}</td>

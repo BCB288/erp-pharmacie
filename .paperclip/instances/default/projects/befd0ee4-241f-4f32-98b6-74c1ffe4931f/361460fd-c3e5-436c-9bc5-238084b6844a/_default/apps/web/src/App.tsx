@@ -8,6 +8,7 @@ import { InventoryPage } from './features/inventory/InventoryPage'
 import { PosPage } from './features/pos/PosPage'
 import { SuppliersPage } from './features/suppliers/SuppliersPage'
 import { PatientsPage } from './features/patients/PatientsPage'
+import { PatientDetailPage } from './features/patients/PatientDetailPage'
 import { ReportsPage } from './features/reports/ReportsPage'
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="pos" element={<PosPage />} />
             <Route path="suppliers" element={<SuppliersPage />} />
             <Route path="patients" element={<PatientsPage />} />
+            <Route path="patients/:id" element={<PatientDetailPage />} />
             <Route path="reports" element={<ReportsPage />} />
           </Route>
         </Routes>
