@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Smart Scientific Calculator</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f0f13;
+  --surface: #1a1a24;
+  --surface-2: #22222f;
+  --border: #2a2a3a;
+  --text: #e8e8f0;
+  --text-dim: #8888a0;
+  --accent: #6c63ff;
+  --accent-hover: #7b73ff;
+  --op: #2d2d40;
+  --op-hover: #3a3a52;
+  --func: #1e1e2e;
+  --func-hover: #2a2a3e;
+  --danger: #ff6b6b;
+  --success: #4ecdc4;
+  --radius: 12px;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 6px;
+}
+
+/* Display */
+#display {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+#history-peek {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 18px;
+  cursor: pointer;
+}
+#history-peek:hover { color: var(--accent); }
+
+#expression {
+  font-size: 18px;
+  color: var(--text-dim);
+  min-height: 26px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: right;
+  transition: color 0.15s;
+}
+
+#result {
+  font-size: 38px;
+  font-weight: 600;
+  text-align: right;
+  min-height: 48px;
+  line-height: 1.2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  letter-spacing: -0.5px;
+}
+
+#angle-mode {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  font-size: 11px;
+  color: var(--accent);
+  background: rgba(108, 99, 255, 0.12);
+  padding: 2px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 500;
+}
+
+#memory-indicator {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 11px;
+  color: var(--success);
+  background: rgba(78, 205, 196, 0.12);
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: none;
+  font-weight: 500;
+}
+
+/* Mode tabs */
+#mode-tabs {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.mode-tab {
+  flex: 1;
+  padding: 6px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dim);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.mode-tab.active {
+  color: var(--accent);
+  background: rgba(108, 99, 255, 0.1);
+  border-color: var(--accent);
+}
+
+/* Button grid */
+#keypad {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-height: 0;
+}
+
+.row {
+  display: flex;
+  gap: 5px;
+  flex: 1;
+}
+
+button {
+  flex: 1;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.1s;
+  color: var(--text);
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  overflow: hidden;
+  font-family: inherit;
+  min-height: 0;
+}
+
+button:active { transform: scale(0.95); }
+button.num { background: var(--surface-2); font-size: 19px; }
+button.num:hover { background: #2a2a3d; }
+button.op { background: var(--op); color: var(--accent); }
+button.op:hover { background: var(--op-hover); }
+button.func { background: var(--func); color: var(--text-dim); font-size: 13px; }
+button.func:hover { background: var(--func-hover); }
+button.accent { background: var(--accent); color: #fff; font-weight: 600; }
+button.accent:hover { background: var(--accent-hover); }
+button.danger { color: var(--danger); }
+button.wide { flex: 2; }
+
+button .sub {
+  font-size: 9px;
+  position: absolute;
+  bottom: 3px;
+  right: 6px;
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+
+/* History panel */
+#history-panel {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 100;
+  flex-direction: column;
+}
+#history-panel.open { display: flex; }
+
+#history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+#history-header h3 { font-size: 18px; font-weight: 600; }
+#history-close {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px 8px;
+  flex: none;
+}
+
+#history-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px;
+}
+
+.history-item {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.history-item:hover { opacity: 0.8; }
+.history-item .expr { font-size: 14px; color: var(--text-dim); }
+.history-item .res { font-size: 20px; font-weight: 500; margin-top: 2px; }
+
+#history-clear {
+  margin: 12px 20px;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--danger);
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+  flex: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+@media (max-width: 360px) {
+  #result { font-size: 30px; }
+  #expression { font-size: 15px; }
+  button { font-size: 14px; border-radius: 8px; }
+  button.num { font-size: 17px; }
+  button.func { font-size: 11px; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="display">
+    <span id="angle-mode" onclick="toggleAngleMode()">RAD</span>
+    <span id="memory-indicator">M</span>
+    <div id="history-peek" onclick="openHistory()"></div>
+    <div id="expression"></div>
+    <div id="result">0</div>
+  </div>
+
+  <div id="mode-tabs">
+    <div class="mode-tab active" onclick="setMode('basic')">Basic</div>
+    <div class="mode-tab" onclick="setMode('sci')">Scientific</div>
+    <div class="mode-tab" onclick="setMode('func')">Functions</div>
+  </div>
+
+  <div id="keypad"></div>
+</div>
+
+<div id="history-panel">
+  <div id="history-header">
+    <h3>History</h3>
+    <button id="history-close" onclick="closeHistory()">&times;</button>
+  </div>
+  <div id="history-list"></div>
+  <div id="history-clear" onclick="clearHistory()">Clear History</div>
+</div>
+
+<script>
+// State
+let input = '';
+let lastResult = null;
+let justEvaluated = false;
+let angleMode = 'rad'; // rad or deg
+let memory = 0;
+let history = JSON.parse(localStorage.getItem('calc_history') || '[]');
+let mode = 'basic';
+let invMode = false;
+
+const $expr = document.getElementById('expression');
+const $result = document.getElementById('result');
+const $keypad = document.getElementById('keypad');
+const $histPeek = document.getElementById('history-peek');
+const $memInd = document.getElementById('memory-indicator');
+const $angleBtn = document.getElementById('angle-mode');
+
+// Layouts
+const layouts = {
+  basic: [
+    [{ l: 'C', c: 'danger func', a: 'clear' }, { l: '( )', c: 'func', a: 'paren' }, { l: '%', c: 'func', a: '%' }, { l: '\u00f7', c: 'op', a: '/' }],
+    [{ l: '7', c: 'num', a: '7' }, { l: '8', c: 'num', a: '8' }, { l: '9', c: 'num', a: '9' }, { l: '\u00d7', c: 'op', a: '*' }],
+    [{ l: '4', c: 'num', a: '4' }, { l: '5', c: 'num', a: '5' }, { l: '6', c: 'num', a: '6' }, { l: '\u2212', c: 'op', a: '-' }],
+    [{ l: '1', c: 'num', a: '1' }, { l: '2', c: 'num', a: '2' }, { l: '3', c: 'num', a: '3' }, { l: '+', c: 'op', a: '+' }],
+    [{ l: '0', c: 'num wide', a: '0' }, { l: '.', c: 'num', a: '.' }, { l: '=', c: 'accent', a: '=' }],
+  ],
+  sci: [
+    [{ l: 'C', c: 'danger func', a: 'clear' }, { l: 'DEL', c: 'func', a: 'del' }, { l: 'INV', c: 'func', a: 'inv' }, { l: '\u00f7', c: 'op', a: '/' }],
+    [{ l: 'sin', c: 'func', a: 'sin' }, { l: 'cos', c: 'func', a: 'cos' }, { l: 'tan', c: 'func', a: 'tan' }, { l: '\u00d7', c: 'op', a: '*' }],
+    [{ l: 'ln', c: 'func', a: 'ln' }, { l: 'log', c: 'func', a: 'log' }, { l: '\u221a', c: 'func', a: 'sqrt' }, { l: '\u2212', c: 'op', a: '-' }],
+    [{ l: '\u03c0', c: 'func', a: 'pi' }, { l: 'e', c: 'func', a: 'e' }, { l: 'x\u00b2', c: 'func', a: 'sq' }, { l: '+', c: 'op', a: '+' }],
+    [{ l: '( )', c: 'func', a: 'paren' }, { l: 'x\u02b8', c: 'func', a: '^' }, { l: 'EXP', c: 'func', a: 'exp' }, { l: '=', c: 'accent', a: '=' }],
+  ],
+  func: [
+    [{ l: 'C', c: 'danger func', a: 'clear' }, { l: 'DEL', c: 'func', a: 'del' }, { l: 'MC', c: 'func', a: 'mc' }, { l: 'MR', c: 'func', a: 'mr' }],
+    [{ l: 'M+', c: 'func', a: 'm+' }, { l: 'M\u2212', c: 'func', a: 'm-' }, { l: '|x|', c: 'func', a: 'abs' }, { l: 'n!', c: 'func', a: 'fact' }],
+    [{ l: '\u221b', c: 'func', a: 'cbrt' }, { l: 'x\u207b\u00b9', c: 'func', a: 'inv_x' }, { l: 'mod', c: 'func', a: 'mod' }, { l: '\u230a\u230b', c: 'func', a: 'floor' }],
+    [{ l: 'sinh', c: 'func', a: 'sinh' }, { l: 'cosh', c: 'func', a: 'cosh' }, { l: 'tanh', c: 'func', a: 'tanh' }, { l: '\u2308\u2309', c: 'func', a: 'ceil' }],
+    [{ l: '( )', c: 'func', a: 'paren' }, { l: ',', c: 'func', a: ',' }, { l: 'Ans', c: 'func', a: 'ans' }, { l: '=', c: 'accent', a: '=' }],
+  ],
+};
+
+// Inverse labels
+const invLabels = { sin: 'asin', cos: 'acos', tan: 'atan', ln: 'e\u02e3', log: '10\u02e3', '\u221a': '\u221b', 'x\u00b2': 'x\u00b3', sinh: 'asinh', cosh: 'acosh', tanh: 'atanh' };
+const invActions = { sin: 'asin', cos: 'acos', tan: 'atan', ln: 'exp', log: 'pow10', sqrt: 'cbrt', sq: 'cube', sinh: 'asinh', cosh: 'acosh', tanh: 'atanh' };
+
+function renderKeypad() {
+  const layout = layouts[mode];
+  $keypad.innerHTML = '';
+  layout.forEach(row => {
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'row';
+    row.forEach(btn => {
+      const b = document.createElement('button');
+      let label = btn.l;
+      let action = btn.a;
+      if (invMode && invLabels[btn.l]) label = invLabels[btn.l];
+      if (invMode && invActions[btn.a]) action = invActions[btn.a];
+      b.className = btn.c + (btn.a === 'inv' && invMode ? ' active' : '');
+      if (btn.a === 'inv' && invMode) b.style.color = 'var(--accent)';
+      b.textContent = label;
+      b.addEventListener('click', () => handleAction(action));
+      b.addEventListener('touchstart', () => {}, { passive: true }); // faster touch
+      rowDiv.appendChild(b);
+    });
+    $keypad.appendChild(rowDiv);
+  });
+}
+
+function setMode(m) {
+  mode = m;
+  invMode = false;
+  document.querySelectorAll('.mode-tab').forEach((t, i) => {
+    t.classList.toggle('active', ['basic', 'sci', 'func'][i] === m);
+  });
+  renderKeypad();
+}
+
+function toggleAngleMode() {
+  angleMode = angleMode === 'rad' ? 'deg' : 'rad';
+  $angleBtn.textContent = angleMode.toUpperCase();
+}
+
+// Smart parentheses: insert ( or ) based on context
+function smartParen() {
+  const opens = (input.match(/\(/g) || []).length;
+  const closes = (input.match(/\)/g) || []).length;
+  const last = input.slice(-1);
+  if (opens > closes && last !== '(' && !/[+\-*/^(%]$/.test(input)) {
+    return ')';
+  }
+  return '(';
+}
+
+function appendInput(str) {
+  if (justEvaluated) {
+    if (/[0-9.]/.test(str)) {
+      input = '';
+    } else if (lastResult !== null) {
+      input = formatNum(lastResult);
+    }
+    justEvaluated = false;
+  }
+  input += str;
+  updateDisplay();
+}
+
+function handleAction(action) {
+  switch (action) {
+    case 'clear':
+      input = '';
+      lastResult = null;
+      justEvaluated = false;
+      $expr.textContent = '';
+      $result.textContent = '0';
+      return;
+    case 'del':
+      if (justEvaluated) { input = ''; justEvaluated = false; }
+      // Remove function names as a unit
+      const fnMatch = input.match(/(sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|asinh|acosh|atanh|log|ln|sqrt|cbrt|abs|floor|ceil|exp)\($/);
+      if (fnMatch) {
+        input = input.slice(0, -fnMatch[0].length);
+      } else {
+        input = input.slice(0, -1);
+      }
+      updateDisplay();
+      return;
+    case '=':
+      evaluate();
+      return;
+    case 'paren':
+      appendInput(smartParen());
+      return;
+    case 'inv':
+      invMode = !invMode;
+      renderKeypad();
+      return;
+    case 'pi':
+      appendInput('\u03c0');
+      return;
+    case 'e':
+      if (justEvaluated) { input = ''; justEvaluated = false; }
+      appendInput('e');
+      return;
+    case 'sq':
+      appendInput('\u00b2');
+      return;
+    case 'cube':
+      appendInput('\u00b3');
+      return;
+    case '^':
+      appendInput('^');
+      return;
+    case '%':
+      appendInput('%');
+      return;
+    case 'mod':
+      appendInput(' mod ');
+      return;
+    case 'sin': case 'cos': case 'tan':
+    case 'asin': case 'acos': case 'atan':
+    case 'sinh': case 'cosh': case 'tanh':
+    case 'asinh': case 'acosh': case 'atanh':
+    case 'ln': case 'log': case 'sqrt': case 'cbrt':
+    case 'abs': case 'floor': case 'ceil': case 'exp':
+    case 'pow10':
+      appendInput(action + '(');
+      return;
+    case 'fact':
+      appendInput('!');
+      return;
+    case 'inv_x':
+      appendInput('\u207b\u00b9');
+      return;
+    case 'mc':
+      memory = 0;
+      $memInd.style.display = 'none';
+      return;
+    case 'mr':
+      appendInput(String(memory));
+      return;
+    case 'm+':
+      if (lastResult !== null) { memory += lastResult; $memInd.style.display = 'inline'; }
+      return;
+    case 'm-':
+      if (lastResult !== null) { memory -= lastResult; $memInd.style.display = memory !== 0 ? 'inline' : 'none'; }
+      return;
+    case 'ans':
+      if (lastResult !== null) appendInput('Ans');
+      return;
+    case ',':
+      appendInput(',');
+      return;
+    default:
+      // Numbers, operators, dot
+      if (['+', '-', '*', '/'].includes(action)) {
+        // Replace trailing operator
+        if (/[+\-*/]$/.test(input) && !justEvaluated) {
+          input = input.slice(0, -1);
+        }
+      }
+      appendInput(action);
+  }
+}
+
+function updateDisplay() {
+  const display = prettify(input);
+  $expr.textContent = '';
+  $result.textContent = display || '0';
+
+  // Live preview
+  if (input && !/[+\-*/^(]$/.test(input.trim())) {
+    try {
+      const val = compute(input);
+      if (val !== null && isFinite(val)) {
+        // Only show preview if different from input
+        const formatted = formatNum(val);
+        if (formatted !== input && formatted !== display) {
+          $result.textContent = formatted;
+          $expr.textContent = display;
+        }
+      }
+    } catch (e) { /* silent */ }
+  }
+}
+
+function prettify(expr) {
+  return expr
+    .replace(/\*/g, '\u00d7')
+    .replace(/\//g, '\u00f7')
+    .replace(/-/g, '\u2212');
+}
+
+function evaluate() {
+  if (!input) return;
+  try {
+    const val = compute(input);
+    if (val === null || !isFinite(val)) {
+      $expr.textContent = prettify(input);
+      $result.textContent = isNaN(val) ? 'Error' : '\u221e';
+      return;
+    }
+    const formatted = formatNum(val);
+    $expr.textContent = prettify(input) + ' =';
+    $result.textContent = formatted;
+    addHistory(input, formatted);
+    lastResult = val;
+    input = formatted;
+    justEvaluated = true;
+  } catch (e) {
+    $expr.textContent = prettify(input);
+    $result.textContent = 'Error';
+  }
+}
+
+function formatNum(n) {
+  if (Number.isInteger(n) && Math.abs(n) < 1e15) return n.toString();
+  if (Math.abs(n) < 1e-10 && n !== 0) return n.toExponential(6);
+  if (Math.abs(n) >= 1e15) return n.toExponential(6);
+  // Up to 10 significant digits, strip trailing zeros
+  const s = parseFloat(n.toPrecision(10)).toString();
+  return s;
+}
+
+// Expression parser (recursive descent)
+function compute(expr) {
+  // Pre-process
+  let s = expr.trim();
+  // Replace display chars
+  s = s.replace(/\u03c0/g, '(3.141592653589793)');
+  s = s.replace(/Ans/g, lastResult !== null ? `(${lastResult})` : '0');
+  // Auto-close parens
+  const opens = (s.match(/\(/g) || []).length;
+  const closes = (s.match(/\)/g) || []).length;
+  for (let i = 0; i < opens - closes; i++) s += ')';
+  // Superscript ops
+  s = s.replace(/\u00b2/g, '^(2)');
+  s = s.replace(/\u00b3/g, '^(3)');
+  s = s.replace(/\u207b\u00b9/g, '^(-1)');
+  // mod
+  s = s.replace(/ mod /g, '%');
+  // Implicit multiplication: 2( => 2*( , )(  => )*(, 2sin => 2*sin, )2 => )*2
+  s = s.replace(/(\d)\(/g, '$1*(');
+  s = s.replace(/\)(\d)/g, ')*$1');
+  s = s.replace(/\)\(/g, ')*(');
+  s = s.replace(/(\d)(sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|asinh|acosh|atanh|log|ln|sqrt|cbrt|abs|floor|ceil|exp|pow10)/g, '$1*$2');
+
+  const parser = new Parser(s);
+  const result = parser.parseExpression();
+  if (parser.pos < parser.str.length) throw new Error('Unexpected char');
+  return result;
+}
+
+class Parser {
+  constructor(str) {
+    this.str = str;
+    this.pos = 0;
+  }
+
+  peek() { this.skipSpaces(); return this.str[this.pos]; }
+  next() { this.skipSpaces(); return this.str[this.pos++]; }
+  skipSpaces() { while (this.pos < this.str.length && this.str[this.pos] === ' ') this.pos++; }
+
+  eat(ch) {
+    this.skipSpaces();
+    if (this.str[this.pos] === ch) { this.pos++; return true; }
+    return false;
+  }
+
+  parseExpression() {
+    let left = this.parseTerm();
+    while (true) {
+      if (this.eat('+')) { left = left + this.parseTerm(); }
+      else if (this.eat('-')) { left = left - this.parseTerm(); }
+      else break;
+    }
+    return left;
+  }
+
+  parseTerm() {
+    let left = this.parseUnary();
+    while (true) {
+      if (this.eat('*')) { left = left * this.parseUnary(); }
+      else if (this.eat('/')) { left = left / this.parseUnary(); }
+      else if (this.eat('%')) { left = left % this.parseUnary(); }
+      else break;
+    }
+    return left;
+  }
+
+  parseUnary() {
+    if (this.eat('+')) return this.parsePower();
+    if (this.eat('-')) return -this.parsePower();
+    return this.parsePower();
+  }
+
+  parsePower() {
+    let base = this.parsePostfix();
+    if (this.eat('^')) {
+      const exp = this.parseUnary(); // right-associative
+      base = Math.pow(base, exp);
+    }
+    return base;
+  }
+
+  parsePostfix() {
+    let val = this.parseAtom();
+    // factorial
+    while (this.peek() === '!') {
+      this.next();
+      val = factorial(val);
+    }
+    return val;
+  }
+
+  parseAtom() {
+    this.skipSpaces();
+
+    // Parenthesized expression
+    if (this.eat('(')) {
+      const val = this.parseExpression();
+      this.eat(')');
+      return val;
+    }
+
+    // Named constants
+    if (this.str.substr(this.pos, 1) === 'e' && !/[a-z]/.test(this.str[this.pos + 1] || '')) {
+      this.pos++;
+      return Math.E;
+    }
+
+    // Functions
+    const funcs = ['asinh', 'acosh', 'atanh', 'asin', 'acos', 'atan', 'sinh', 'cosh', 'tanh', 'sin', 'cos', 'tan', 'pow10', 'log', 'ln', 'sqrt', 'cbrt', 'abs', 'floor', 'ceil', 'exp'];
+    for (const fn of funcs) {
+      if (this.str.substr(this.pos, fn.length) === fn && this.str[this.pos + fn.length] === '(') {
+        this.pos += fn.length;
+        this.eat('(');
+        const arg = this.parseExpression();
+        this.eat(')');
+        return applyFunc(fn, arg);
+      }
+    }
+
+    // Number
+    const start = this.pos;
+    while (this.pos < this.str.length && /[0-9.]/.test(this.str[this.pos])) this.pos++;
+    // Scientific notation like 1.5e10
+    if (this.pos < this.str.length && this.str[this.pos] === 'e' && /[0-9+\-]/.test(this.str[this.pos + 1] || '')) {
+      this.pos++;
+      if (this.str[this.pos] === '+' || this.str[this.pos] === '-') this.pos++;
+      while (this.pos < this.str.length && /[0-9]/.test(this.str[this.pos])) this.pos++;
+    }
+    if (this.pos === start) throw new Error('Unexpected token at ' + this.pos);
+    return parseFloat(this.str.substring(start, this.pos));
+  }
+}
+
+function toRad(x) { return angleMode === 'deg' ? x * Math.PI / 180 : x; }
+function fromRad(x) { return angleMode === 'deg' ? x * 180 / Math.PI : x; }
+
+function applyFunc(fn, x) {
+  switch (fn) {
+    case 'sin': return Math.sin(toRad(x));
+    case 'cos': return Math.cos(toRad(x));
+    case 'tan': return Math.tan(toRad(x));
+    case 'asin': return fromRad(Math.asin(x));
+    case 'acos': return fromRad(Math.acos(x));
+    case 'atan': return fromRad(Math.atan(x));
+    case 'sinh': return Math.sinh(x);
+    case 'cosh': return Math.cosh(x);
+    case 'tanh': return Math.tanh(x);
+    case 'asinh': return Math.asinh(x);
+    case 'acosh': return Math.acosh(x);
+    case 'atanh': return Math.atanh(x);
+    case 'ln': return Math.log(x);
+    case 'log': return Math.log10(x);
+    case 'sqrt': return Math.sqrt(x);
+    case 'cbrt': return Math.cbrt(x);
+    case 'abs': return Math.abs(x);
+    case 'floor': return Math.floor(x);
+    case 'ceil': return Math.ceil(x);
+    case 'exp': return Math.exp(x);
+    case 'pow10': return Math.pow(10, x);
+    default: throw new Error('Unknown function: ' + fn);
+  }
+}
+
+function factorial(n) {
+  if (n < 0) return NaN;
+  if (n === 0 || n === 1) return 1;
+  if (!Number.isInteger(n)) {
+    // Gamma approximation for non-integers (Stirling)
+    return gamma(n + 1);
+  }
+  if (n > 170) return Infinity;
+  let r = 1;
+  for (let i = 2; i <= n; i++) r *= i;
+  return r;
+}
+
+function gamma(z) {
+  // Lanczos approximation
+  if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z));
+  z -= 1;
+  const g = 7;
+  const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+  let x = c[0];
+  for (let i = 1; i < g + 2; i++) x += c[i] / (z + i);
+  const t = z + g + 0.5;
+  return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x;
+}
+
+// History
+function addHistory(expr, result) {
+  history.unshift({ expr, result, time: Date.now() });
+  if (history.length > 50) history.pop();
+  localStorage.setItem('calc_history', JSON.stringify(history));
+  updateHistoryPeek();
+}
+
+function updateHistoryPeek() {
+  if (history.length > 0) {
+    $histPeek.textContent = prettify(history[0].expr) + ' = ' + history[0].result;
+  } else {
+    $histPeek.textContent = '';
+  }
+}
+
+function openHistory() {
+  const panel = document.getElementById('history-panel');
+  const list = document.getElementById('history-list');
+  list.innerHTML = '';
+  if (history.length === 0) {
+    list.innerHTML = '<p style="color: var(--text-dim); text-align: center; padding: 40px 0;">No history yet</p>';
+  } else {
+    history.forEach((h, i) => {
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      item.innerHTML = `<div class="expr">${prettify(h.expr)}</div><div class="res">${h.result}</div>`;
+      item.addEventListener('click', () => {
+        input = h.result;
+        justEvaluated = false;
+        updateDisplay();
+        closeHistory();
+      });
+      list.appendChild(item);
+    });
+  }
+  panel.classList.add('open');
+}
+
+function closeHistory() {
+  document.getElementById('history-panel').classList.remove('open');
+}
+
+function clearHistory() {
+  history = [];
+  localStorage.removeItem('calc_history');
+  closeHistory();
+  updateHistoryPeek();
+}
+
+// Keyboard support
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('history-panel').classList.contains('open')) {
+    if (e.key === 'Escape') closeHistory();
+    return;
+  }
+
+  const key = e.key;
+  if (/^[0-9]$/.test(key)) { handleAction(key); e.preventDefault(); }
+  else if (key === '.') { handleAction('.'); e.preventDefault(); }
+  else if (key === '+') { handleAction('+'); e.preventDefault(); }
+  else if (key === '-') { handleAction('-'); e.preventDefault(); }
+  else if (key === '*') { handleAction('*'); e.preventDefault(); }
+  else if (key === '/') { handleAction('/'); e.preventDefault(); }
+  else if (key === '^') { handleAction('^'); e.preventDefault(); }
+  else if (key === '%') { handleAction('%'); e.preventDefault(); }
+  else if (key === '(') { appendInput('('); e.preventDefault(); }
+  else if (key === ')') { appendInput(')'); e.preventDefault(); }
+  else if (key === '!' ) { appendInput('!'); e.preventDefault(); }
+  else if (key === 'Enter' || key === '=') { evaluate(); e.preventDefault(); }
+  else if (key === 'Backspace') { handleAction('del'); e.preventDefault(); }
+  else if (key === 'Escape') { handleAction('clear'); e.preventDefault(); }
+  else if (key === 'p' && e.ctrlKey) { appendInput('\u03c0'); e.preventDefault(); }
+});
+
+// Init
+renderKeypad();
+updateHistoryPeek();
+</script>
+</body>
+</html>
