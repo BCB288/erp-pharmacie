@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { supabase } from "../lib/supabase.js";
+import { supabase, createAuthClient } from "../lib/supabase.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 import { requireRole } from "../middleware/role.middleware.js";
 import { asyncHandler } from "../middleware/error.middleware.js";
@@ -28,7 +28,10 @@ router.post("/login", asyncHandler(async (req: Request, res: Response): Promise<
     return;
   }
 
-  const { data: profile } = await supabase
+  // Use the session token to query profile (respects RLS)
+  const userClient = createAuthClient(data.session.access_token);
+
+  const { data: profile } = await userClient
     .from("profiles")
     .select("*")
     .eq("id", data.user.id)
@@ -57,6 +60,7 @@ router.post("/login", asyncHandler(async (req: Request, res: Response): Promise<
 /**
  * POST /api/auth/register
  * Admin only — create a new staff account with a specified role.
+ * Requires SUPABASE_SERVICE_ROLE_KEY to be set.
  */
 router.post(
   "/register",

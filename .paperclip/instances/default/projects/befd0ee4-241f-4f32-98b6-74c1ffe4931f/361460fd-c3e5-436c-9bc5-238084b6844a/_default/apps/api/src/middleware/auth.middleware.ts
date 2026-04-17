@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { supabase } from "../lib/supabase.js";
+import { supabase, createAuthClient, supabaseStorage } from "../lib/supabase.js";
 
 export interface AuthenticatedUser {
   id: string;
@@ -17,8 +17,8 @@ declare global {
 
 /**
  * Express middleware that verifies the Supabase JWT from the Authorization header.
- * Uses Supabase's getUser() for verification — no manual JWT secret needed.
- * Fetches the user's role from the profiles table.
+ * Creates a per-request Supabase client scoped to the authenticated user so that
+ * downstream services respect RLS policies without needing the service-role key.
  */
 export async function authMiddleware(
   req: Request,
@@ -44,7 +44,10 @@ export async function authMiddleware(
     return;
   }
 
-  const { data: profile } = await supabase
+  // Create a user-scoped client for this request
+  const userClient = createAuthClient(token);
+
+  const { data: profile } = await userClient
     .from("profiles")
     .select("role")
     .eq("id", user.id)
@@ -56,5 +59,7 @@ export async function authMiddleware(
     role: (profile?.role ?? "cashier") as AuthenticatedUser["role"],
   };
 
-  next();
+  // Run downstream handlers within AsyncLocalStorage so all supabase
+  // imports automatically resolve to the user-scoped client
+  supabaseStorage.run(userClient, () => next());
 }
