@@ -11,9 +11,17 @@
     "dev:api": "npm run dev -w apps/api",
     "build": "npm run build -w packages/shared && npm run build -w apps/web && npm run build -w apps/api",
     "typecheck": "tsc -b",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint ."
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.2.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.5.0",
+    "typescript-eslint": "^8.58.2"
   }
 }
