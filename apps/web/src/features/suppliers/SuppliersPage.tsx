@@ -1,8 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '../../hooks/useAuth'
-import { supabase } from '../../lib/supabase'
-
-const API = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+import { apiFetch } from '../../lib/api'
 
 type Tab = 'suppliers' | 'orders'
 
@@ -59,24 +57,6 @@ interface POLineItem {
   drug_name: string
   quantity_ordered: number
   unit_cost: number
-}
-
-async function authHeaders(): Promise<Record<string, string>> {
-  const { data } = await supabase.auth.getSession()
-  return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${data.session?.access_token ?? ''}`,
-  }
-}
-
-async function apiFetch<T>(path: string, opts?: RequestInit): Promise<T> {
-  const headers = await authHeaders()
-  const res = await fetch(`${API}${path}`, { ...opts, headers: { ...headers, ...opts?.headers } })
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}))
-    throw new Error(body.error || `API error ${res.status}`)
-  }
-  return res.json()
 }
 
 /* ------------------------------------------------------------------ */
@@ -207,7 +187,7 @@ function PurchaseOrderFormModal({
     if (term.length < 2) { setDrugResults([]); return }
     setDrugsLoading(true)
     try {
-      const res = await apiFetch<{ data: Drug[] }>(`/api/inventory?search=${encodeURIComponent(term)}&limit=10`)
+      const res = await apiFetch<{ data: Drug[] }>(`/api/inventory/drugs?search=${encodeURIComponent(term)}&limit=10`)
       setDrugResults(res.data)
     } catch {
       setDrugResults([])
