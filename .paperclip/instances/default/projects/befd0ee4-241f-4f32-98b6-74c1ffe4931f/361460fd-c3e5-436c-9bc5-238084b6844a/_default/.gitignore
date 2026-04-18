@@ -38,3 +38,5 @@ coverage/
 
 # Turbo (if added later)
 .turbo/
+
+.vercel
